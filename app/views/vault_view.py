@@ -3,7 +3,7 @@ Vista del vault (bóveda de contraseñas)
 Muestra y gestiona todas las contraseñas
 """
 import flet as ft
-import pyperclip
+
 
 
 class VaultView(ft.Container):
@@ -29,7 +29,7 @@ class VaultView(ft.Container):
         # Lista de contraseñas
         self.password_list = ft.ListView(
             spacing=10,
-            padding=20,
+            padding=ft.padding.symmetric(horizontal=20, vertical=10),
             expand=True,
         )
         
@@ -72,7 +72,6 @@ class VaultView(ft.Container):
                 ft.Container(height=20),
                 # Búsqueda
                 self.search_field,
-                ft.Container(height=10),
                 # Lista de contraseñas
                 ft.Container(
                     content=self.password_list,
@@ -180,9 +179,16 @@ class VaultView(ft.Container):
     def copy_password(self, password: str):
         """Copiar contraseña al portapapeles"""
         try:
-            pyperclip.copy(password)
+            # Compatibilidad con diferentes versiones de Flet
+            if hasattr(self._page, 'set_clipboard'):
+                self._page.set_clipboard(password)
+            else:
+                self._page.clipboard = password
+            
+            self._page.update()
             self.show_snackbar("Contraseña copiada al portapapeles", "#4caf50")
-        except:
+        except Exception as e:
+            print(f"Error al copiar: {e}")
             self.show_snackbar("Error al copiar contraseña", "#f44336")
     
     def on_search(self, e):

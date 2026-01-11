@@ -4,6 +4,8 @@ Permite crear o abrir una base de datos KeePass
 """
 import flet as ft
 from pathlib import Path
+import subprocess
+
 
 
 class AuthView(ft.Container):
@@ -13,19 +15,35 @@ class AuthView(ft.Container):
         super().__init__()
         self._page = page
         self.on_auth_success = on_auth_success
+
         
         # Variables
         self.selected_file = None
         self.is_create_mode = True
         
+        
+        # File Picker (Inyectado desde main)
+        # self.file_picker = ft.FilePicker()
+        # self._page.overlay.append(self.file_picker)
+        
+        # Campo para ruta del archivo
         # Campo para ruta del archivo
         self.file_path_field = ft.TextField(
             label="Ruta del archivo .kdbx",
             hint_text="/home/usuario/mi_base_datos.kdbx",
-            width=500,
+            width=450,
             visible=False,
             border_radius=10,
             bgcolor="#2b2b2b",
+            read_only=False,
+        )
+        
+        self.browse_btn = ft.IconButton(
+            icon=ft.icons.Icons.FOLDER_OPEN,
+            tooltip="Examinar...",
+            on_click=self.on_browse_click,
+            visible=False,
+            icon_color="#1976d2",
         )
         
         # Campos de entrada
@@ -119,7 +137,13 @@ class AuthView(ft.Container):
                 ft.Container(height=30),
                 self.back_btn,
                 ft.Container(height=10),
-                self.file_path_field,
+                ft.Row(
+                    controls=[
+                        self.file_path_field,
+                        self.browse_btn,
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                ),
                 ft.Container(height=20),
                 self.password_field,
                 ft.Container(height=20),
@@ -150,6 +174,7 @@ class AuthView(ft.Container):
         self.open_btn.visible = False
         self.back_btn.visible = True
         self.file_path_field.visible = True
+        self.browse_btn.visible = True
         self.password_field.visible = True
         self.submit_btn.visible = True
         self.error_text.visible = False
@@ -175,6 +200,7 @@ class AuthView(ft.Container):
         self.open_btn.visible = True
         self.back_btn.visible = False
         self.file_path_field.visible = False
+        self.browse_btn.visible = False
         self.file_path_field.value = ""
         self.password_field.visible = False
         self.password_field.value = ""
@@ -226,3 +252,43 @@ class AuthView(ft.Container):
         self.error_text.value = message
         self.error_text.visible = True
         self.update()
+
+
+
+    def on_browse_click(self, e):
+        """Manejar clic en examinar usando Zenity"""
+        try:
+            if not self.is_create_mode:
+                # Abrir archivo
+                cmd = [
+                    "zenity", "--file-selection", 
+                    "--title=Seleccionar base de datos KeePass",
+                    "--file-filter=*.kdbx"
+                ]
+                result = subprocess.run(cmd, stdout=subprocess.PIPE, text=True)
+                if result.returncode == 0:
+                    path = result.stdout.strip()
+                    if path:
+                        self.file_path_field.value = path
+                        self.file_path_field.update()
+            else:
+                # Guardar archivo
+                cmd = [
+                    "zenity", "--file-selection", "--save",
+                    "--confirm-overwrite",
+                    "--title=Crear nueva base de datos",
+                    "--filename=passwords.kdbx",
+                    "--file-filter=*.kdbx"
+                ]
+                result = subprocess.run(cmd, stdout=subprocess.PIPE, text=True)
+                if result.returncode == 0:
+                    path = result.stdout.strip()
+                    if path:
+                        if not path.endswith('.kdbx'):
+                            path += '.kdbx'
+                        self.file_path_field.value = path
+                        self.file_path_field.update()
+        except Exception as ex:
+            print(f"Error en file picker (zenity): {ex}")
+            self.show_error(f"Error al seleccionar archivo: {str(ex)}")
+
