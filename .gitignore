@@ -38,9 +38,10 @@ debian-package/
 *.rpm
 *.msi
 *.dmg
-*.snap
 
 # Snapcraft
+*.snap
+*.deb
 parts/
 stage/
 prime/

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Keyflow Logo](assets/logo.png)
+<img src="assets/logo.png" alt="Keyflow Logo" width="150" />
 
 **Un gestor de contraseñas seguro, moderno y de código abierto compatible con archivos .kdbx**
 
@@ -41,35 +41,47 @@ Keyflow es un gestor de contraseñas moderno desarrollado con Python y PySide6 q
 
 ---
 
-## 🚀 Instalación
+## 📦 Instalación
 
-### Requisitos Previos
+### Opción 1: Instalar mediante Snap (Recomendado)
 
-- Python 3.11 o superior
-- pip (gestor de paquetes de Python)
+Si tu sistema soporta paquetes Snap (Ubuntu, Manjaro, Linux Mint, etc.), simplemente ejecuta:
 
-### Pasos de Instalación
-
-1. **Clonar el repositorio**:
 ```bash
+sudo snap install keyflow
+```
+
+### Opción 2: Instalar Paquete .deb
+
+Descarga el último release desde GitHub y ejecútalo:
+
+```bash
+sudo dpkg -i keyflow_1.0.0_amd64.deb
 sudo apt-get install -f
 ```
 
-### Opción 2: Construir desde fuente
+---
 
-Para construir tu propio paquete `.deb`:
+## 🚀 Ejecutar la aplicación
+
+Después de la instalación, puedes ejecutar Keyflow de dos formas:
+
+1. **Desde el menú de aplicaciones**: Busca "Keyflow Password Manager" en el menú de tu sistema
+2. **Desde la terminal**:
+   ```bash
+   keyflow
+   ```
+
+### Desinstalar
+
+Para desinstalar Keyflow completamente:
 
 ```bash
-# Clonar el repositorio
-git clone https://github.com/Maalfer/keyflow.git
-cd keyflow
+# Si instalaste mediante Snap
+sudo snap remove keyflow
 
-# Ejecutar el script de construcción
-./build-deb.sh
-
-# Instalar el paquete generado
-sudo dpkg -i keyflow_1.0.0_all.deb
-sudo apt-get install -f
+# Si instalaste mediane .deb
+sudo apt remove keyflow
 ```
 
 ### Ejecutar la aplicación
@@ -166,6 +178,19 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 - GitHub: [@Maalfer](https://github.com/Maalfer)
 - LinkedIn: [maalfer1](https://www.linkedin.com/in/maalfer1/)
 - Proyecto: [Keyflow](https://github.com/Maalfer/keyflow)
+
+---
+
+
+## 🐛 Reportar Bugs
+
+Si encuentras algún error o tienes problemas con la aplicación, por favor repórtalo en nuestra sección de Issues:
+[https://github.com/Maalfer/keyflow/issues](https://github.com/Maalfer/keyflow/issues)
+
+## 🗺️ Próximos Objetivos (Roadmap)
+
+- [ ] ✅ **Soporte Windows**: Próximamente disponible instalador `.exe` y `.msi`.
+- [ ] ✅ **Soporte Flatpak**: Próximamente disponible en Flathub para mayor compatibilidad entre distribuciones.
 
 ---
 
