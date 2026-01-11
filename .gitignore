@@ -4,37 +4,70 @@ __pycache__/
 *$py.class
 *.so
 .Python
+*.egg
+*.egg-info/
+dist-packages/
+*.manifest
+*.spec
+
+# Virtual Environment
 venv/
 env/
 ENV/
-*.egg-info/
-dist/
-build/
+.venv
 
-# IDEs
+# IDE / Editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-
-# OS
 .DS_Store
-Thumbs.db
 
-# Application specific
+# PyInstaller
+build/
+dist/
+*.spec
+
+# Debian Package Build
+debian-package/
+
+# Compiled Packages (outputs)
+*.deb
+*.exe
+*.rpm
+*.msi
+*.dmg
+
+# KeePass Database Files (personal data)
 *.kdbx
-*.kdbx.lock
-test_*.kdbx
-debug_*.py
-test_recovery.py
+*.kdb
 
 # Logs
 *.log
 
-# Local settings
-.env
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
 
-# DEB package build
-debian-package/
-*.deb
+# OS
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# Keep important files (explicitly NOT ignored)
+# These files SHOULD be committed:
+# - compilar.sh (build script)
+# - requirements.txt (dependencies)
+# - README.md (documentation)
+# - assets/ (icons and images)
+# - src/ (source code)
+# - main.py (entry point)

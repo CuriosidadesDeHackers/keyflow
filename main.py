@@ -21,7 +21,7 @@ class KeyflowApp(QApplication):
         self.setApplicationDisplayName("Keyflow Password Manager")
         
         # Establecer el desktop file name para integración con GNOME/Ubuntu dock
-        self.setDesktopFileName("keyflow.desktop")
+        self.setDesktopFileName("keyflow")
         
         self.setStyle("Fusion")
         self.setStyleSheet(DARK_THEME)

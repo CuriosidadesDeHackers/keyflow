@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script unificado para compilar e instalar Keyflow
+# Script para compilar e instalar Keyflow para Linux (.deb)
 # Autor: Maalfer
 # Uso: ./compilar.sh [--instalar]
 
@@ -17,17 +17,28 @@ PKG_NAME="keyflow"
 PKG_VERSION="1.0.0"
 PKG_ARCH="all"
 BUILD_DIR="debian-package"
-DEB_FILE="${PKG_NAME}_${PKG_VERSION}_${PKG_ARCH}.deb"
+DEB_FILE="keyflow.deb"
 
-# Verificar si se solicita instalación automática
+# Verificar argumentos
 AUTO_INSTALL=false
-if [ "$1" == "--instalar" ] || [ "$1" == "-i" ]; then
-    AUTO_INSTALL=true
-fi
+
+for arg in "$@"; do
+    case $arg in
+        --instalar|-i)
+            AUTO_INSTALL=true
+            ;;
+        *)
+            # Ignorar otros argumentos o mostrar ayuda simple
+            ;;
+    esac
+done
 
 echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}  Keyflow - Compilador .deb${NC}"
+echo -e "${BLUE}  Keyflow - Compilador Linux (.deb)${NC}"
 echo -e "${BLUE}========================================${NC}"
+echo
+
+echo -e "${BLUE}>>> Compilando paquete .deb...${NC}"
 echo
 
 # Limpiar construcciones previas
@@ -40,6 +51,12 @@ if [ -f "$DEB_FILE" ]; then
     echo -e "${YELLOW}Eliminando paquete .deb anterior...${NC}"
     rm -f "$DEB_FILE"
 fi
+
+# Limpiar artefactos de Windows/Pyinstaller si existen
+if [ -d "build" ]; then rm -rf "build"; fi
+if [ -d "dist" ]; then rm -rf "dist"; fi
+if [ -d "build_venv" ]; then rm -rf "build_venv"; fi
+if [ -f "keyflow.spec" ]; then rm -f "keyflow.spec"; fi
 
 echo -e "${GREEN}✓${NC} Limpieza completada"
 echo
@@ -197,7 +214,7 @@ echo -e "${YELLOW}Construyendo paquete .deb...${NC}"
 dpkg-deb --build "$BUILD_DIR" "$DEB_FILE" 2>&1 | grep -v "root directory" | grep -v "hint:" || true
 echo
 
-# Verificar el paquete
+# Verificar el paquete y (opcionalmente) instalar
 if [ -f "$DEB_FILE" ]; then
     echo -e "${GREEN}========================================${NC}"
     echo -e "${GREEN}  ✓ PAQUETE CONSTRUIDO EXITOSAMENTE${NC}"
@@ -247,9 +264,7 @@ if [ -f "$DEB_FILE" ]; then
     fi
     
     # Limpiar archivos temporales
-    echo -e "${YELLOW}Limpiando archivos temporales...${NC}"
     rm -rf "$BUILD_DIR"
-    echo -e "${GREEN}✓${NC} Limpieza completada"
 else
     echo -e "${RED}✗ Error: No se pudo crear el paquete .deb${NC}"
     exit 1

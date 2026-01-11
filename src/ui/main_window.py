@@ -74,8 +74,13 @@ class MainWindow(QMainWindow):
         self.table = QTableWidget()
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(["UUID", "Título", "Usuario", "URL", "Notas"])
-        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
-        self.table.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch)
+        
+        # Configurar anchos de columna
+        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch) # Título ocupa el espacio disponible
+        self.table.setColumnWidth(2, 250) # Usuario más ancho
+        self.table.setColumnWidth(3, 200) # URL
+        self.table.setColumnWidth(4, 150) # Notas más estrecho
+        
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
         self.table.hideColumn(0)
