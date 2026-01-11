@@ -39,7 +39,7 @@ class EntryDialog(QDialog):
         
         self.toggle_btn = QPushButton("Mostrar")
         self.toggle_btn.setCheckable(True)
-        self.toggle_btn.setFixedWidth(60)
+        self.toggle_btn.setFixedWidth(80)
         self.toggle_btn.clicked.connect(self.toggle_password)
         
         self.gen_btn = QPushButton("🎲 Generar")

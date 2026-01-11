@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                                QTableWidget, QTableWidgetItem, QPushButton, 
-                               QHeaderView, QMessageBox, QMenu, QLabel)
+                               QHeaderView, QMessageBox, QMenu, QLabel, QLineEdit)
 from PySide6.QtCore import Qt, Signal, QTimer
 from PySide6.QtGui import QAction, QClipboard, QGuiApplication, QKeySequence
 
@@ -15,6 +15,9 @@ class MainWindow(QMainWindow):
         self.resize(1000, 700)
         
         self.db = db_helper
+        
+        # Lista para almacenar todas las entradas
+        self.all_entries = []
         
         self.clipboard_timer = QTimer(self)
         self.clipboard_timer.timeout.connect(self.update_clipboard_countdown)
@@ -53,6 +56,18 @@ class MainWindow(QMainWindow):
         self.toolbar_layout.addWidget(self.refresh_btn)
 
         self.toolbar_layout.addStretch()
+        
+        # Campo de búsqueda
+        self.search_label = QLabel("🔍 Buscar:")
+        self.toolbar_layout.addWidget(self.search_label)
+        
+        self.search_field = QLineEdit()
+        self.search_field.setPlaceholderText("Buscar por título, usuario, URL o notas...")
+        self.search_field.setMinimumWidth(300)
+        self.search_field.textChanged.connect(self.filter_entries)
+        self.search_field.setClearButtonEnabled(True)
+        self.toolbar_layout.addWidget(self.search_field)
+        
         self.layout.addLayout(self.toolbar_layout)
         
         self.table = QTableWidget()
@@ -82,13 +97,45 @@ class MainWindow(QMainWindow):
         self.logout_signal.emit()
 
     def load_entries(self):
-        self.table.setRowCount(0)
+        """Carga todas las entradas desde la base de datos"""
         entries = self.db.get_entries()
+        self.all_entries = list(entries)
+        self.all_entries.sort(key=lambda x: x.title if x.title else "")
         
-        entries_list = list(entries)
-        entries_list.sort(key=lambda x: x.title if x.title else "")
-
-        for row, entry in enumerate(entries_list):
+        # Limpiar el campo de búsqueda y mostrar todas las entradas
+        self.search_field.clear()
+        self.display_entries(self.all_entries)
+    
+    def filter_entries(self):
+        """Filtra las entradas basándose en el texto de búsqueda"""
+        search_text = self.search_field.text().lower().strip()
+        
+        if not search_text:
+            # Si no hay texto de búsqueda, mostrar todas las entradas
+            self.display_entries(self.all_entries)
+            return
+        
+        # Filtrar entradas que contengan el texto de búsqueda en título, usuario, URL o notas
+        filtered = []
+        for entry in self.all_entries:
+            title = (entry.title or "").lower()
+            username = (entry.username or "").lower()
+            url = (entry.url or "").lower()
+            notes = (entry.notes or "").lower()
+            
+            if (search_text in title or 
+                search_text in username or 
+                search_text in url or 
+                search_text in notes):
+                filtered.append(entry)
+        
+        self.display_entries(filtered)
+    
+    def display_entries(self, entries):
+        """Muestra las entradas proporcionadas en la tabla"""
+        self.table.setRowCount(0)
+        
+        for row, entry in enumerate(entries):
             uuid = str(entry.uuid)
             title = entry.title or ""
             username = entry.username or ""
@@ -101,6 +148,14 @@ class MainWindow(QMainWindow):
             self.table.setItem(row, 2, QTableWidgetItem(username))
             self.table.setItem(row, 3, QTableWidgetItem(url))
             self.table.setItem(row, 4, QTableWidgetItem(notes))
+        
+        # Actualizar la barra de estado con el número de entradas mostradas
+        total = len(self.all_entries)
+        shown = len(entries)
+        if shown < total:
+            self.status_bar.showMessage(f"Mostrando {shown} de {total} entradas", 3000)
+        else:
+            self.status_bar.clearMessage()
 
     def add_entry(self):
         dialog = EntryDialog(self, title="New Entry")
@@ -113,6 +168,7 @@ class MainWindow(QMainWindow):
             try:
                 self.db.add_entry(title, user, pwd, url, notes)
                 self.load_entries()
+                self.status_bar.showMessage("Entrada agregada correctamente", 3000)
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Error al agregar entrada: {e}")
 
@@ -142,6 +198,7 @@ class MainWindow(QMainWindow):
             try:
                 self.db.update_entry(entry.uuid, new_title, new_user, new_pwd, new_url, new_notes)
                 self.load_entries()
+                self.status_bar.showMessage("Entrada actualizada correctamente", 3000)
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Error al actualizar entrada: {e}")
 
@@ -161,6 +218,7 @@ class MainWindow(QMainWindow):
             import uuid
             self.db.delete_entry(uuid.UUID(uuid_str))
             self.load_entries()
+            self.status_bar.showMessage("Entrada eliminada correctamente", 3000)
 
     def show_context_menu(self, position):
         selected_items = self.table.selectedItems()
