@@ -104,43 +104,12 @@ sudo apt remove keyflow
 
 ---
 
-## 📚 Uso
-
-### Crear una Nueva Bóveda
-
-1. Ejecuta `python main.py`
-2. Haz clic en **"Crear Nueva Base de Datos"**
-3. Elige la ubicación y nombre del archivo `.kdbx`
-4. Establece una contraseña maestra segura
-5. ¡Listo! Ahora puedes agregar tus credenciales
-
-### Abrir una Bóveda Existente
-
-1. Si es tu primera vez: Haz clic en **"Abrir Base de Datos Existente"**
-2. Si ya abriste una antes: Simplemente ingresa la contraseña en el campo destacado
-3. Presiona **Enter** o clic en **"Abrir Bóveda"**
-
-### Gestionar Entradas
-
-- **Agregar**: Botón **"+ Agregar Entrada"** o `Ctrl+N`
-- **Editar**: Doble clic en una entrada
-- **Eliminar**: Selecciona una entrada y presiona `Delete`
-- **Copiar**: Clic derecho → Copiar Usuario/Contraseña/URL
-
-### Generar Contraseñas
-
-Al crear o editar una entrada, haz clic en el botón **"Generar"** junto al campo de contraseña para crear una contraseña segura de 20 caracteres.
-
----
-
 ## 🛡️ Seguridad
 
 - **Cifrado**: AES-256 para almacenamiento de datos
 - **KDF Optimizado**: Argon2 con iteraciones ajustables (por defecto: 2 para rendimiento)
 - **Limpieza de Portapapeles**: Automática después de 12 segundos
 - **Sin Almacenamiento en Claro**: Las contraseñas nunca se guardan sin cifrar
-
-> ⚠️ **Nota**: La configuración KDF está optimizada para uso personal. Para entornos de máxima seguridad, considera aumentar las iteraciones.
 
 ---
 
