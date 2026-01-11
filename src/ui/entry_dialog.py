@@ -42,9 +42,9 @@ class EntryDialog(QDialog):
         self.toggle_btn.setFixedWidth(60)
         self.toggle_btn.clicked.connect(self.toggle_password)
         
-        self.gen_btn = QPushButton("Generar")
-        self.gen_btn.setFixedWidth(80)
-        self.gen_btn.setStyleSheet("background-color: #0e639c; padding: 4px 12px;")
+        self.gen_btn = QPushButton("🎲 Generar")
+        self.gen_btn.setFixedWidth(100)
+        self.gen_btn.setProperty("class", "primary")
         self.gen_btn.clicked.connect(self.generate_password)
         
         pass_layout.addWidget(self.pass_input)

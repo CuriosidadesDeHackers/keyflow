@@ -42,7 +42,8 @@ class MainWindow(QMainWindow):
 
         self.toolbar_layout = QHBoxLayout()
         
-        self.add_btn = QPushButton("+ Agregar Entrada")
+        self.add_btn = QPushButton("➕ Agregar Entrada")
+        self.add_btn.setProperty("class", "primary")
         self.add_btn.clicked.connect(self.add_entry)
         self.toolbar_layout.addWidget(self.add_btn)
         
