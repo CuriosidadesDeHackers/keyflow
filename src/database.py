@@ -35,15 +35,18 @@ class Database:
         if self.kp:
             self.kp.save()
 
-    def add_entry(self, title, username, password, url, notes, group=None):
+    def add_entry(self, title, username, password, url, notes):
         """Add a new entry to the database."""
         if not self.kp:
+            print("Error: self.kp is None")
             return None
         
-        if group is None:
-            group = self.kp.root_group
+        root = self.kp.root_group
+        if root is None:
+            print("Error: self.kp.root_group is None!")
+            raise ValueError("The database file is corrupted (missing Root Group). Please 'Close Vault' and 'Create New Database' to fix this.")
 
-        entry = self.kp.add_entry(group, title, username, password, url=url, notes=notes)
+        entry = self.kp.add_entry(root, title, username, password, url=url, notes=notes)
         self.save()
         return entry
 
@@ -51,7 +54,6 @@ class Database:
         """Get all entries from the root group (flat for now)."""
         if not self.kp:
             return []
-        # Recursive fetch could be added here, but flat list of all entries for now
         return self.kp.entries
 
     def update_entry(self, entry_uuid, title, username, password, url, notes):

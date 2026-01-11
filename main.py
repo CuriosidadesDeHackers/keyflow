@@ -7,6 +7,10 @@ from src.ui.styles import DARK_THEME
 
 class KeyflowApp(QApplication):
     def __init__(self, argv):
+        # Suppress Wayland noise
+        import os
+        os.environ["QT_LOGGING_RULES"] = "qt.qpa.wayland*.debug=false;qt.qpa.wayland.textinput=false"
+        
         super().__init__(argv)
         self.setStyle("Fusion")
         self.setStyleSheet(DARK_THEME)

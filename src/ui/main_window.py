@@ -83,9 +83,10 @@ class MainWindow(QMainWindow):
         entries = self.db.get_entries()
         
         # Sort entries by title for better UX
-        entries.sort(key=lambda x: x.title if x.title else "")
+        entries_list = list(entries)
+        entries_list.sort(key=lambda x: x.title if x.title else "")
 
-        for row, entry in enumerate(entries):
+        for row, entry in enumerate(entries_list):
             uuid = str(entry.uuid)
             title = entry.title or ""
             username = entry.username or ""
