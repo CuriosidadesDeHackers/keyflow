@@ -3,6 +3,8 @@ KeePass Database Manager
 Maneja todas las operaciones con archivos .kdbx
 """
 import os
+from uuid import UUID
+
 from typing import Optional, List, Dict
 from pykeepass import PyKeePass, create_database
 from pykeepass.exceptions import CredentialsError
@@ -140,7 +142,7 @@ class KeePassManager:
             return False
         
         try:
-            entry = self.kp.find_entries(uuid=uuid, first=True)
+            entry = self.kp.find_entries(uuid=UUID(uuid), first=True)
             if not entry:
                 return False
             
@@ -170,7 +172,7 @@ class KeePassManager:
             return False
         
         try:
-            entry = self.kp.find_entries(uuid=uuid, first=True)
+            entry = self.kp.find_entries(uuid=UUID(uuid), first=True)
             if not entry:
                 return False
             
