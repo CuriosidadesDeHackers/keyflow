@@ -239,7 +239,7 @@ class VaultView(ft.Container):
             ],
         )
         
-        self._page.dialog = dialog
+        self._page.overlay.append(dialog)
         dialog.open = True
         self._page.update()
     
@@ -295,7 +295,7 @@ class VaultView(ft.Container):
             ],
         )
         
-        self._page.dialog = dialog
+        self._page.overlay.append(dialog)
         dialog.open = True
         self._page.update()
     
@@ -343,7 +343,7 @@ class VaultView(ft.Container):
             ],
         )
         
-        self._page.dialog = dialog
+        self._page.overlay.append(dialog)
         dialog.open = True
         self._page.update()
     
@@ -373,7 +373,7 @@ class VaultView(ft.Container):
             ],
         )
         
-        self._page.dialog = dialog
+        self._page.overlay.append(dialog)
         dialog.open = True
         self._page.update()
     
