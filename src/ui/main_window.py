@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
                                QTableWidget, QTableWidgetItem, QPushButton, 
                                QHeaderView, QMessageBox, QMenu, QLabel)
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QAction, QClipboard, QGuiApplication
+from PySide6.QtGui import QAction, QClipboard, QGuiApplication, QKeySequence
 
 from .entry_dialog import EntryDialog
 
@@ -21,6 +21,9 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
         
         self.layout = QVBoxLayout(self.central_widget)
+
+        # Menu Bar
+        self.create_menu_bar()
         
         # Header / Status
         self.header_layout = QHBoxLayout()
@@ -195,3 +198,65 @@ class MainWindow(QMainWindow):
         entry = self.db.kp.find_entries(uuid=uuid.UUID(uuid_str), first=True)
         if entry and entry.password:
             QGuiApplication.clipboard().setText(entry.password)
+
+    def create_menu_bar(self):
+        menubar = self.menuBar()
+
+        # File Menu
+        file_menu = menubar.addMenu("&File")
+
+        save_action = QAction("&Save", self)
+        save_action.setShortcut(QKeySequence.Save)
+        save_action.triggered.connect(self.db.save)
+        file_menu.addAction(save_action)
+
+        file_menu.addSeparator()
+
+        close_vault_action = QAction("Close &Vault", self)
+        close_vault_action.triggered.connect(self.logout)
+        file_menu.addAction(close_vault_action)
+        
+        exit_action = QAction("E&xit", self)
+        exit_action.setShortcut(QKeySequence.Quit)
+        exit_action.triggered.connect(self.close)
+        file_menu.addAction(exit_action)
+
+        # Edit Menu
+        edit_menu = menubar.addMenu("&Edit")
+
+        add_action = QAction("&Add Entry", self)
+        add_action.setShortcut(QKeySequence.New)
+        add_action.triggered.connect(self.add_entry)
+        edit_menu.addAction(add_action)
+
+        edit_entry_action = QAction("&Edit Entry", self)
+        edit_entry_action.triggered.connect(self.edit_entry)
+        edit_menu.addAction(edit_entry_action)
+        
+        delete_action = QAction("&Delete Entry", self)
+        delete_action.setShortcut(QKeySequence.Delete)
+        delete_action.triggered.connect(self.delete_entry)
+        edit_menu.addAction(delete_action)
+
+        edit_menu.addSeparator()
+
+        copy_user_action = QAction("Copy &Username", self)
+        copy_user_action.triggered.connect(lambda: self.copy_field(2))
+        edit_menu.addAction(copy_user_action)
+
+        copy_pass_action = QAction("Copy &Password", self)
+        copy_pass_action.triggered.connect(self.copy_password)
+        edit_menu.addAction(copy_pass_action)
+
+        # Help Menu
+        help_menu = menubar.addMenu("&Help")
+
+        about_action = QAction("&About", self)
+        about_action.triggered.connect(self.show_about)
+        help_menu.addAction(about_action)
+
+    def show_about(self):
+        QMessageBox.information(self, "About Keyflow", 
+                              "Keyflow Password Manager\n\n"
+                              "A secure, open-source password manager supporting .kdbx files.\n"
+                              "Built with Python and PySide6.")
