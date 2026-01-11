@@ -10,9 +10,19 @@ from src.ui.styles import DARK_THEME
 class KeyflowApp(QApplication):
     def __init__(self, argv):
         import os
-        os.environ["QT_LOGGING_RULES"] = "qt.qpa.wayland*.debug=false;qt.qpa.wayland.textinput=false"
+        # Suprimir warnings benignos de Qt
+        os.environ["QT_LOGGING_RULES"] = "qt.qpa.wayland*.debug=false;qt.qpa.wayland.textinput=false;qt.qpa.services=false"
         
         super().__init__(argv)
+        
+        # Configurar nombre de aplicación para integración con el sistema
+        self.setApplicationName("keyflow")
+        self.setOrganizationName("Keyflow")
+        self.setApplicationDisplayName("Keyflow Password Manager")
+        
+        # Establecer el desktop file name para integración con GNOME/Ubuntu dock
+        self.setDesktopFileName("keyflow.desktop")
+        
         self.setStyle("Fusion")
         self.setStyleSheet(DARK_THEME)
         

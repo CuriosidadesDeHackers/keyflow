@@ -71,17 +71,53 @@ python main.py
 
 ---
 
-## 🐳 Docker
+## 📦 Instalación desde Paquete .deb (Debian/Ubuntu)
 
-También puedes ejecutar Keyflow usando Docker (requiere X11 forwarding para GUI):
+### Opción 1: Instalar pre-compilado
+
+Si tienes el archivo `.deb` pre-compilado:
 
 ```bash
-# Construir la imagen
-docker build -t keyflow .
+# Instalar el paquete
+sudo dpkg -i keyflow_1.0.0_all.deb
 
-# Ejecutar (Linux)
-xhost +local:docker
-docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix keyflow
+# Instalar dependencias faltantes (si las hay)
+sudo apt-get install -f
+```
+
+### Opción 2: Construir desde fuente
+
+Para construir tu propio paquete `.deb`:
+
+```bash
+# Clonar el repositorio
+git clone https://github.com/Maalfer/keyflow.git
+cd keyflow
+
+# Ejecutar el script de construcción
+./build-deb.sh
+
+# Instalar el paquete generado
+sudo dpkg -i keyflow_1.0.0_all.deb
+sudo apt-get install -f
+```
+
+### Ejecutar la aplicación
+
+Después de la instalación, puedes ejecutar Keyflow de dos formas:
+
+1. **Desde el menú de aplicaciones**: Busca "Keyflow Password Manager" en el menú de tu sistema
+2. **Desde la terminal**:
+   ```bash
+   keyflow
+   ```
+
+### Desinstalar
+
+Para desinstalar Keyflow completamente:
+
+```bash
+sudo apt remove keyflow
 ```
 
 ---
@@ -142,21 +178,8 @@ keyflow/
 ├── tests/               # Tests unitarios
 ├── main.py             # Punto de entrada
 ├── requirements.txt    # Dependencias
-├── Dockerfile          # Imagen Docker
 └── README.md           # Este archivo
 ```
-
----
-
-## 🤝 Contribuir
-
-Las contribuciones son bienvenidas! Si encuentras un bug o tienes una sugerencia:
-
-1. Haz un Fork del proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
 
 ---
 

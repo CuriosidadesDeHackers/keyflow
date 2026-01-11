@@ -3,7 +3,7 @@ QWidget {
     background-color: #1e1e1e;
     color: #e0e0e0;
     font-family: 'Segoe UI', 'Ubuntu', sans-serif;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 QPushButton {
@@ -12,7 +12,7 @@ QPushButton {
     border: 1px solid #404040;
     border-radius: 4px;
     padding: 8px 16px;
-    font-size: 13px;
+    font-size: 14px;
     min-height: 28px;
 }
 
@@ -35,6 +35,7 @@ QPushButton[class="primary"] {
     background-color: #007acc;
     color: white;
     border: 1px solid #005a9e;
+    font-size: 14px;
 }
 
 QPushButton[class="primary"]:hover {
@@ -50,6 +51,7 @@ QPushButton[class="danger"] {
     background-color: #d32f2f;
     color: white;
     border: 1px solid #b71c1c;
+    font-size: 14px;
 }
 
 QPushButton[class="danger"]:hover {
@@ -65,6 +67,7 @@ QPushButton[class="secondary"] {
     background-color: #2d2d2d;
     border: 1px solid #404040;
     color: #b0b0b0;
+    font-size: 14px;
 }
 
 QPushButton[class="secondary"]:hover {
@@ -80,7 +83,7 @@ QLineEdit, QTextEdit {
     border-radius: 3px;
     padding: 6px 10px;
     selection-background-color: #007acc;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 QLineEdit:focus, QTextEdit:focus {
@@ -99,10 +102,11 @@ QTableWidget {
     border: 1px solid #3d3d3d;
     border-radius: 3px;
     selection-background-color: #0e639c;
+    font-size: 14px;
 }
 
 QTableWidget::item {
-    padding: 6px;
+    padding: 8px;
     border: none;
 }
 
@@ -114,16 +118,18 @@ QTableWidget::item:selected {
 QHeaderView::section {
     background-color: #2d2d2d;
     color: #b0b0b0;
-    padding: 6px;
+    padding: 8px;
     border: none;
     border-bottom: 1px solid #404040;
     font-weight: 600;
+    font-size: 14px;
 }
 
 QMenuBar {
     background-color: #2d2d2d;
     color: #e0e0e0;
     border-bottom: 1px solid #3d3d3d;
+    font-size: 14px;
 }
 
 QMenuBar::item {
@@ -141,6 +147,7 @@ QMenu {
     color: #e0e0e0;
     border: 1px solid #3d3d3d;
     border-radius: 3px;
+    font-size: 14px;
 }
 
 QMenu::item {
@@ -166,11 +173,27 @@ QDialog {
 QLabel {
     color: #e0e0e0;
     background-color: transparent;
+    font-size: 14px;
 }
 
 QStatusBar {
     background-color: #2d2d2d;
     color: #888888;
     border-top: 1px solid #3d3d3d;
+    font-size: 13px;
+}
+
+QProgressBar {
+    background-color: #2d2d30;
+    border: 1px solid #3e3e42;
+    border-radius: 4px;
+    text-align: center;
+    color: #e0e0e0;
+    font-size: 13px;
+}
+
+QProgressBar::chunk {
+    background-color: #0e639c;
+    border-radius: 3px;
 }
 """

@@ -34,3 +34,7 @@ test_recovery.py
 
 # Local settings
 .env
+
+# DEB package build
+debian-package/
+*.deb

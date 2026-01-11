@@ -51,7 +51,7 @@ class Database:
         if self.kp:
             self.kp.save()
 
-    def add_entry(self, title, username, password, url, notes):
+    def add_entry(self, title, username, password, url, notes, emoji=""):
         """Add a new entry to the database."""
         if not self.kp:
             print("Error: self.kp is None")
@@ -63,6 +63,11 @@ class Database:
             raise ValueError("The database file is corrupted (missing Root Group). Please 'Close Vault' and 'Create New Database' to fix this.")
 
         entry = self.kp.add_entry(root, title, username, password, url=url, notes=notes)
+        
+        # Almacenar emoji en campo personalizado si se proporciona
+        if emoji:
+            entry.set_custom_property("emoji", emoji)
+        
         self.save()
         return entry
 
@@ -72,7 +77,7 @@ class Database:
             return []
         return self.kp.entries
 
-    def update_entry(self, entry_uuid, title, username, password, url, notes):
+    def update_entry(self, entry_uuid, title, username, password, url, notes, emoji=""):
         """Update an existing entry."""
         entry = self.kp.find_entries(uuid=entry_uuid, first=True)
         if entry:
@@ -81,6 +86,15 @@ class Database:
             entry.password = password
             entry.url = url
             entry.notes = notes
+            
+            # Actualizar o eliminar emoji
+            if emoji:
+                entry.set_custom_property("emoji", emoji)
+            else:
+                # Si el emoji está vacío, eliminar la propiedad personalizada
+                if entry.get_custom_property("emoji"):
+                    entry.delete_custom_property("emoji")
+            
             self.save()
 
     def delete_entry(self, entry_uuid):
@@ -89,3 +103,10 @@ class Database:
         if entry:
             self.kp.delete_entry(entry)
             self.save()
+    
+    def get_entry_emoji(self, entry):
+        """Obtener el emoji de una entrada."""
+        if not entry:
+            return ""
+        emoji = entry.get_custom_property("emoji")
+        return emoji if emoji else ""

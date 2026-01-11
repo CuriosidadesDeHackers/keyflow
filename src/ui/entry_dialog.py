@@ -1,14 +1,14 @@
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
-                               QLineEdit, QTextEdit, QPushButton, QWidget)
+                               QLineEdit, QTextEdit, QPushButton, QWidget, QGridLayout, QScrollArea)
 from PySide6.QtCore import Qt
 
 class EntryDialog(QDialog):
-    def __init__(self, parent=None, title="", username="", password="", url="", notes=""):
+    def __init__(self, parent=None, title="", username="", password="", url="", notes="", emoji=""):
         super().__init__(parent)
         self.setWindowTitle("Detalles de la Entrada")
         
         self.setModal(True)
-        self.resize(500, 600)
+        self.resize(500, 700)
         
         layout = QVBoxLayout(self)
         layout.setSpacing(16)
@@ -21,10 +21,116 @@ class EntryDialog(QDialog):
         form_layout = QVBoxLayout()
         form_layout.setSpacing(12)
 
-        form_layout.addWidget(QLabel("Título"))
+        # Título y Emoji en la misma fila
+        title_emoji_layout = QHBoxLayout()
+        
+        title_container = QWidget()
+        title_v_layout = QVBoxLayout(title_container)
+        title_v_layout.setContentsMargins(0, 0, 0, 0)
+        title_v_layout.setSpacing(4)
+        title_v_layout.addWidget(QLabel("Título"))
         self.title_input = QLineEdit(title)
         self.title_input.setPlaceholderText("ej. Cuenta de Google")
-        form_layout.addWidget(self.title_input)
+        title_v_layout.addWidget(self.title_input)
+        
+        emoji_container = QWidget()
+        emoji_v_layout = QVBoxLayout(emoji_container)
+        emoji_v_layout.setContentsMargins(0, 0, 0, 0)
+        emoji_v_layout.setSpacing(4)
+        emoji_v_layout.addWidget(QLabel("Emoji"))
+        self.emoji_input = QLineEdit(emoji)
+        self.emoji_input.setPlaceholderText("😀")
+        self.emoji_input.setMaxLength(2)
+        self.emoji_input.setFixedWidth(70)
+        self.emoji_input.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.emoji_input.setStyleSheet("font-size: 24px;")
+        emoji_v_layout.addWidget(self.emoji_input)
+        
+        title_emoji_layout.addWidget(title_container)
+        title_emoji_layout.addWidget(emoji_container)
+        form_layout.addLayout(title_emoji_layout)
+        
+        # Catálogo de emojis
+        emoji_catalog_label = QLabel("Selecciona un emoji:")
+        emoji_catalog_label.setStyleSheet("font-size: 12px; color: #888; margin-top: 5px;")
+        form_layout.addWidget(emoji_catalog_label)
+        
+        # Grid de emojis predefinidos
+        emoji_grid = QGridLayout()
+        emoji_grid.setSpacing(4)
+        
+        # Catálogo de emojis comunes organizados por categorías
+        self.emoji_catalog = [
+            # Seguridad y Claves
+            "🔑", "🔐", "🔒", "🔓", "🛡️",
+            # Comunicación
+            "📧", "✉️", "📨", "💬", "📱",
+            # Finanzas
+            "💳", "💰", "🏦", "💵", "💴",
+            # Tecnología
+            "💻", "🖥️", "⌨️", "🖱️", "📡",
+            # Internet y Web
+            "🌐", "🌍", "🔗", "📶", "🛜",
+            # Trabajo y Productividad
+            "💼", "📊", "📈", "📋", "✏️",
+            # Entretenimiento
+            "🎮", "🎯", "🎬", "🎵", "📺",
+            # Social
+            "👤", "👥", "🙋", "💭", "❤️",
+            # Cloud y Almacenamiento
+            "☁️", "💾", "📁", "📂", "🗂️",
+            # Shopping y Comercio
+            "🛒", "🛍️", "🏪", "🏬", "💸",
+            # Diversos
+            "⭐", "✨", "🔔", "📌", "🏠",
+        ]
+        
+        # Crear botones para cada emoji
+        row, col = 0, 0
+        for emoji_char in self.emoji_catalog:
+            btn = QPushButton(emoji_char)
+            btn.setFixedSize(38, 38)
+            btn.setStyleSheet("""
+                QPushButton {
+                    font-size: 20px;
+                    border: 1px solid #555;
+                    border-radius: 4px;
+                    background-color: #2b2b2b;
+                }
+                QPushButton:hover {
+                    background-color: #3b3b3b;
+                    border-color: #777;
+                }
+                QPushButton:pressed {
+                    background-color: #1b1b1b;
+                }
+            """)
+            btn.setCursor(Qt.CursorShape.PointingHandCursor)
+            btn.clicked.connect(lambda checked, e=emoji_char: self.select_emoji(e))
+            emoji_grid.addWidget(btn, row, col)
+            
+            col += 1
+            if col >= 10:  # 10 emojis por fila
+                col = 0
+                row += 1
+        
+        # Contenedor con scroll para el catálogo
+        emoji_widget = QWidget()
+        emoji_widget.setLayout(emoji_grid)
+        
+        scroll = QScrollArea()
+        scroll.setWidget(emoji_widget)
+        scroll.setWidgetResizable(True)
+        scroll.setMaximumHeight(200)
+        scroll.setStyleSheet("""
+            QScrollArea {
+                border: 1px solid #444;
+                border-radius: 4px;
+                background-color: #1e1e1e;
+            }
+        """)
+        
+        form_layout.addWidget(scroll)
         
         form_layout.addWidget(QLabel("Usuario"))
         self.user_input = QLineEdit(username)
@@ -42,7 +148,7 @@ class EntryDialog(QDialog):
         self.toggle_btn.setFixedWidth(80)
         self.toggle_btn.clicked.connect(self.toggle_password)
         
-        self.gen_btn = QPushButton("🎲 Generar")
+        self.gen_btn = QPushButton("Generar")
         self.gen_btn.setFixedWidth(100)
         self.gen_btn.setProperty("class", "primary")
         self.gen_btn.clicked.connect(self.generate_password)
@@ -91,6 +197,10 @@ class EntryDialog(QDialog):
         else:
             self.pass_input.setEchoMode(QLineEdit.EchoMode.Password)
             self.toggle_btn.setText("Mostrar")
+    
+    def select_emoji(self, emoji):
+        """Selecciona un emoji del catálogo"""
+        self.emoji_input.setText(emoji)
 
     def generate_password(self):
         import secrets
@@ -111,5 +221,6 @@ class EntryDialog(QDialog):
             self.user_input.text(),
             self.pass_input.text(),
             self.url_input.text(),
-            self.notes_input.toPlainText()
+            self.notes_input.toPlainText(),
+            self.emoji_input.text().strip()  # Emoji como sexto elemento
         )

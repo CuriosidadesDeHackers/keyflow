@@ -49,7 +49,7 @@ class StartScreen(QWidget):
             self.last_vault_password.returnPressed.connect(self.open_last_vault)
             last_vault_layout.addWidget(self.last_vault_password)
             
-            open_last_btn = QPushButton("🔓 Abrir Bóveda")
+            open_last_btn = QPushButton("Abrir Bóveda")
             open_last_btn.setMinimumHeight(50)
             open_last_btn.setProperty("class", "primary")
             open_last_btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -59,14 +59,14 @@ class StartScreen(QWidget):
             layout.addWidget(last_vault_container)
             layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Fixed))
 
-        self.create_btn = QPushButton("✨ Crear Nueva Base de Datos")
+        self.create_btn = QPushButton("Crear Nueva Base de Datos")
         self.create_btn.setMinimumHeight(50)
         self.create_btn.setProperty("class", "primary")
         self.create_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.create_btn.clicked.connect(self.create_db)
         layout.addWidget(self.create_btn)
 
-        self.open_btn = QPushButton("📂 Abrir Base de Datos Existente")
+        self.open_btn = QPushButton("Abrir Base de Datos Existente")
         self.open_btn.setMinimumHeight(50)
         self.open_btn.setProperty("class", "secondary")
         self.open_btn.setCursor(Qt.CursorShape.PointingHandCursor)

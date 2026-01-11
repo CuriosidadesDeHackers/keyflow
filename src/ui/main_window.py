@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                                QTableWidget, QTableWidgetItem, QPushButton, 
-                               QHeaderView, QMessageBox, QMenu, QLabel, QLineEdit)
+                               QHeaderView, QMessageBox, QMenu, QLabel, QLineEdit, QProgressBar)
 from PySide6.QtCore import Qt, Signal, QTimer
 from PySide6.QtGui import QAction, QClipboard, QGuiApplication, QKeySequence
 
@@ -22,6 +22,7 @@ class MainWindow(QMainWindow):
         self.clipboard_timer = QTimer(self)
         self.clipboard_timer.timeout.connect(self.update_clipboard_countdown)
         self.clipboard_remaining = 0
+        self.clipboard_duration = 12  # Duración total en segundos
         
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -45,7 +46,7 @@ class MainWindow(QMainWindow):
 
         self.toolbar_layout = QHBoxLayout()
         
-        self.add_btn = QPushButton("➕ Agregar Entrada")
+        self.add_btn = QPushButton("Agregar Entrada")
         self.add_btn.setProperty("class", "primary")
         self.add_btn.clicked.connect(self.add_entry)
         self.toolbar_layout.addWidget(self.add_btn)
@@ -58,7 +59,7 @@ class MainWindow(QMainWindow):
         self.toolbar_layout.addStretch()
         
         # Campo de búsqueda
-        self.search_label = QLabel("🔍 Buscar:")
+        self.search_label = QLabel("Buscar:")
         self.toolbar_layout.addWidget(self.search_label)
         
         self.search_field = QLineEdit()
@@ -86,6 +87,15 @@ class MainWindow(QMainWindow):
         self.table.customContextMenuRequested.connect(self.show_context_menu)
         
         self.layout.addWidget(self.table)
+        
+        # Barra de progreso del portapapeles
+        self.clipboard_progress = QProgressBar()
+        self.clipboard_progress.setMaximum(self.clipboard_duration * 10)  # 10 updates por segundo
+        self.clipboard_progress.setTextVisible(True)
+        self.clipboard_progress.setFormat("Portapapeles se limpiará en %v segundos")
+        self.clipboard_progress.setVisible(False)
+        self.clipboard_progress.setMaximumHeight(20)
+        self.layout.addWidget(self.clipboard_progress)
         
         self.status_bar = self.statusBar()
         self.status_bar.setStyleSheet("color:")
@@ -141,10 +151,16 @@ class MainWindow(QMainWindow):
             username = entry.username or ""
             url = entry.url or ""
             notes = entry.notes or ""
+            
+            # Obtener emoji de la entrada
+            emoji = entry.get_custom_property("emoji") or ""
+            
+            # Combinar emoji con título
+            display_title = f"{emoji} {title}" if emoji else title
 
             self.table.insertRow(row)
             self.table.setItem(row, 0, QTableWidgetItem(uuid))
-            self.table.setItem(row, 1, QTableWidgetItem(title))
+            self.table.setItem(row, 1, QTableWidgetItem(display_title))
             self.table.setItem(row, 2, QTableWidgetItem(username))
             self.table.setItem(row, 3, QTableWidgetItem(url))
             self.table.setItem(row, 4, QTableWidgetItem(notes))
@@ -160,13 +176,13 @@ class MainWindow(QMainWindow):
     def add_entry(self):
         dialog = EntryDialog(self, title="New Entry")
         if dialog.exec():
-            title, user, pwd, url, notes = dialog.get_data()
+            title, user, pwd, url, notes, emoji = dialog.get_data()  # Ahora retorna 6 valores
             if not title:
                 QMessageBox.warning(self, "Error", "El título es obligatorio")
                 return
                 
             try:
-                self.db.add_entry(title, user, pwd, url, notes)
+                self.db.add_entry(title, user, pwd, url, notes, emoji)
                 self.load_entries()
                 self.status_bar.showMessage("Entrada agregada correctamente", 3000)
             except Exception as e:
@@ -184,19 +200,23 @@ class MainWindow(QMainWindow):
         entry = self.db.kp.find_entries(uuid=uuid.UUID(uuid_str), first=True)
         if not entry:
             return
+        
+        # Obtener emoji de la entrada
+        emoji = entry.get_custom_property("emoji") or ""
 
         dialog = EntryDialog(self, 
                              entry.title or "", 
                              entry.username or "", 
                              entry.password or "", 
                              entry.url or "", 
-                             entry.notes or "")
+                             entry.notes or "",
+                             emoji)
                              
         if dialog.exec():
-            new_title, new_user, new_pwd, new_url, new_notes = dialog.get_data()
+            new_title, new_user, new_pwd, new_url, new_notes, new_emoji = dialog.get_data()
             
             try:
-                self.db.update_entry(entry.uuid, new_title, new_user, new_pwd, new_url, new_notes)
+                self.db.update_entry(entry.uuid, new_title, new_user, new_pwd, new_url, new_notes, new_emoji)
                 self.load_entries()
                 self.status_bar.showMessage("Entrada actualizada correctamente", 3000)
             except Exception as e:
@@ -276,17 +296,23 @@ class MainWindow(QMainWindow):
 
     def start_clipboard_timer(self):
         """Start 12-second countdown to clear clipboard"""
-        self.clipboard_remaining = 12
-        self.clipboard_timer.start(1000)  # 1 second intervals
+        self.clipboard_remaining = self.clipboard_duration * 10  # 10 ticks por segundo
+        self.clipboard_progress.setValue(self.clipboard_remaining)
+        self.clipboard_progress.setVisible(True)
+        self.clipboard_timer.start(100)  # 100ms intervals (10 veces por segundo)
         self.update_clipboard_countdown()
 
     def update_clipboard_countdown(self):
-        """Update status bar with remaining time"""
+        """Update progress bar with remaining time"""
         if self.clipboard_remaining > 0:
-            self.status_bar.showMessage(f"Portapapeles se limpiará en {self.clipboard_remaining} segundos...")
             self.clipboard_remaining -= 1
+            self.clipboard_progress.setValue(self.clipboard_remaining)
+            # Actualizar el texto para mostrar segundos
+            seconds_left = (self.clipboard_remaining + 9) // 10  # Redondear hacia arriba
+            self.clipboard_progress.setFormat(f"Portapapeles se limpiará en {seconds_left} segundos")
         else:
             self.clipboard_timer.stop()
+            self.clipboard_progress.setVisible(False)
             QGuiApplication.clipboard().clear()
             self.status_bar.showMessage("Portapapeles limpiado", 3000)
 
