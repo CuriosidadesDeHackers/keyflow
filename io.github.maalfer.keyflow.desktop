@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Keyflow
+Comment=Gestor de contraseñas seguro y offline
+Exec=keyflow
+Icon=io.github.maalfer.keyflow
+Type=Application
+Categories=Utility;Security;
+Keywords=password;manager;security;
+StartupWMClass=keyflow
+Terminal=false
