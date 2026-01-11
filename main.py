@@ -10,6 +10,8 @@ from src.ui.styles import DARK_THEME
 class KeyflowApp(QApplication):
     def __init__(self, argv):
         import os
+        # Forzar el uso de X11 (xcb) para evitar problemas gráficos y de permisos en Wayland/GNOME
+        os.environ["QT_QPA_PLATFORM"] = "xcb"
         # Suprimir warnings benignos de Qt
         os.environ["QT_LOGGING_RULES"] = "qt.qpa.wayland*.debug=false;qt.qpa.wayland.textinput=false;qt.qpa.services=false"
         

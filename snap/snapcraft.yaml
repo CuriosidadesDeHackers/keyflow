@@ -1,6 +1,6 @@
 name: keyflow
 base: core22
-icon: assets/logo.png
+icon: snap/gui/icon.png
 version: '1.0.0'
 summary: A secure password manager built with Python and PySide6.
 description: |
