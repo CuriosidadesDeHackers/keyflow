@@ -33,7 +33,7 @@ dist/
 debian-package/
 
 # Compiled Packages (outputs)
-*.deb
+
 *.exe
 *.rpm
 *.msi

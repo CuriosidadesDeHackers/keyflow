@@ -78,6 +78,9 @@ class KeyflowApp(QApplication):
         self.db.kp = None
         self.stack.setCurrentWidget(self.start_screen)
 
-if __name__ == "__main__":
+def main():
     app = KeyflowApp(sys.argv)
     sys.exit(app.exec())
+
+if __name__ == "__main__":
+    main()

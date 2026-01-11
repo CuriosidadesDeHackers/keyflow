@@ -1,0 +1,27 @@
+name: keyflow
+base: core22
+icon: assets/logo.png
+version: '1.0.0'
+summary: A secure password manager built with Python and PySide6.
+description: |
+  Keyflow is a modern, secure password manager that helps you store and organize your passwords locally.
+
+grade: devel
+confinement: devmode
+
+apps:
+  keyflow:
+    command: bin/keyflow
+    extensions: [gnome]
+    common-id: keyflow.desktop
+    plugs:
+      - home
+      - network
+      - removable-media
+
+parts:
+  keyflow:
+    plugin: python
+    source: .
+    python-packages:
+      - .
