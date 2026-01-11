@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel, 
                                QFileDialog, QInputDialog, QMessageBox, QSpacerItem, QSizePolicy, QLineEdit)
 from PySide6.QtCore import Qt, Signal, QSettings
+import os
 
 class StartScreen(QWidget):
     open_db_signal = Signal(str, str) # filepath, password
@@ -32,7 +33,6 @@ class StartScreen(QWidget):
 
         # Last vault button (if exists)
         if self.last_vault and os.path.exists(self.last_vault):
-            import os
             vault_name = os.path.basename(self.last_vault)
             self.last_vault_btn = QPushButton(f"Abrir Última Bóveda: {vault_name}")
             self.last_vault_btn.setMinimumHeight(50)

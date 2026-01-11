@@ -301,4 +301,7 @@ class MainWindow(QMainWindow):
         QMessageBox.information(self, "Acerca de Keyflow", 
                               "Gestor de Contraseñas Keyflow\n\n"
                               "Un gestor de contraseñas seguro y de código abierto compatible con archivos .kdbx.\n"
-                              "Desarrollado con Python y PySide6.")
+                              "Desarrollado con Python y PySide6.\n\n"
+                              "Autor: Maalfer\n"
+                              "GitHub: https://github.com/Maalfer/keyflow\n"
+                              "LinkedIn: https://www.linkedin.com/in/maalfer1/")
