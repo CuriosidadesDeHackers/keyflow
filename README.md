@@ -31,9 +31,13 @@ Keyflow es un gestor de contraseñas moderno desarrollado con Python y PySide6 q
 
 ---
 
-## 🖼️ Captura de Pantalla
-
-![Pantalla de Inicio](assets/home.png)
+## 🖼️ Capturas de Pantalla
+ 
+ ### Pantalla de Inicio
+ ![Pantalla de Inicio](assets/home.png)
+ 
+ ### Vista de la Bóveda
+ ![Dashboard](assets/dashboard.png)
 
 ---
 

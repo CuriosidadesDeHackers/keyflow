@@ -1,7 +1,9 @@
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel, 
-                               QFileDialog, QInputDialog, QMessageBox, QSpacerItem, QSizePolicy, QLineEdit, QHBoxLayout)
+                               QFileDialog, QInputDialog, QMessageBox, QSpacerItem, QSizePolicy, QLineEdit, QHBoxLayout,
+                               QProgressBar, QApplication)
 from PySide6.QtCore import Qt, Signal, QSettings
 import os
+from .password_dialog import MasterPasswordDialog
 
 class StartScreen(QWidget):
     open_db_signal = Signal(str, str)
@@ -49,8 +51,12 @@ class StartScreen(QWidget):
             self.last_vault_password.setPlaceholderText("Contraseña Maestra")
             self.last_vault_password.setEchoMode(QLineEdit.EchoMode.Password)
             self.last_vault_password.setMinimumHeight(45)
-            # Aumentar tamaño de fuente para que los puntos/asteriscos se vean más grandes
-            self.last_vault_password.setStyleSheet("font-size: 24px; padding: 5px; letter-spacing: 2px;")
+            
+            # Conectar cambio de texto para ajustar tamaño de fuente dinámicamente
+            self.last_vault_password.textChanged.connect(self.update_password_style)
+            # Estilo inicial (placeholder pequeño)
+            self.last_vault_password.setStyleSheet("font-size: 14px; padding: 10px;")
+            
             self.last_vault_password.returnPressed.connect(self.open_last_vault)
             password_layout.addWidget(self.last_vault_password)
 
@@ -62,6 +68,15 @@ class StartScreen(QWidget):
             password_layout.addWidget(self.toggle_visibility_btn)
 
             last_vault_layout.addLayout(password_layout)
+            
+            # Barra de progreso (animación de carga)
+            self.loading_bar = QProgressBar()
+            self.loading_bar.setRange(0, 0) # Indeterminado (animación continua)
+            self.loading_bar.setTextVisible(False)
+            self.loading_bar.setFixedHeight(5)
+            self.loading_bar.setVisible(False)
+            self.loading_bar.setStyleSheet("QProgressBar { background-color: transparent; border: none; } QProgressBar::chunk { background-color: #007acc; }")
+            last_vault_layout.addWidget(self.loading_bar)
             
             open_last_btn = QPushButton("Abrir Bóveda")
             open_last_btn.setMinimumHeight(50)
@@ -95,15 +110,13 @@ class StartScreen(QWidget):
             if not filepath.endswith(".kdbx"):
                 filepath += ".kdbx"
             
-            pwd, ok = QInputDialog.getText(self, "Establecer Contraseña Maestra", "Ingrese Contraseña Maestra:", echo=QLineEdit.EchoMode.Password)
-            if ok and pwd:
-                confirm, ok2 = QInputDialog.getText(self, "Confirmar Contraseña", "Confirmar Contraseña Maestra:", echo=QLineEdit.EchoMode.Password)
-                if ok2 and confirm == pwd:
-                    self.create_db_signal.emit(filepath, pwd)
-                elif ok2:
-                     QMessageBox.warning(self, "Error", "Las contraseñas no coinciden")
-            elif ok:
-                 QMessageBox.warning(self, "Error", "La contraseña no puede estar vacía")
+            if not filepath.endswith(".kdbx"):
+                filepath += ".kdbx"
+            
+            dialog = MasterPasswordDialog(self)
+            if dialog.exec():
+                pwd = dialog.get_password()
+                self.create_db_signal.emit(filepath, pwd)
 
     def open_db(self):
         filepath, _ = QFileDialog.getOpenFileName(self, "Abrir Base de Datos", "", "Bases de Datos KeePass (*.kdbx)")
@@ -117,7 +130,27 @@ class StartScreen(QWidget):
         if hasattr(self, 'last_vault_password'):
             pwd = self.last_vault_password.text()
             if pwd:
-                self.open_db_signal.emit(self.last_vault, pwd)
+                # Mostrar animación de carga
+                if hasattr(self, 'loading_bar'):
+                    self.loading_bar.setVisible(True)
+                
+                self.last_vault_password.setEnabled(False)
+                if hasattr(self, 'toggle_visibility_btn'):
+                    self.toggle_visibility_btn.setEnabled(False)
+                    
+                # Forzar actualización de la UI para que se vea la animación antes del bloqueo
+                QApplication.processEvents()
+                
+                try:
+                    self.open_db_signal.emit(self.last_vault, pwd)
+                finally:
+                    # Restaurar estado si regresa el control (por error o loop)
+                    if hasattr(self, 'loading_bar'):
+                        self.loading_bar.setVisible(False)
+                    self.last_vault_password.setEnabled(True)
+                    if hasattr(self, 'toggle_visibility_btn'):
+                        self.toggle_visibility_btn.setEnabled(True)
+                    self.last_vault_password.setFocus()
             else:
                 QMessageBox.warning(self, "Error", "La contraseña no puede estar vacía")
 
@@ -128,6 +161,15 @@ class StartScreen(QWidget):
         else:
             self.last_vault_password.setEchoMode(QLineEdit.EchoMode.Password)
             self.toggle_visibility_btn.setText("👁️")
+
+    def update_password_style(self, text):
+        """Cambia el estilo del campo de contraseña según si tiene texto o no."""
+        if text:
+            # Si hay texto, hacer los asteriscos grandes
+            self.last_vault_password.setStyleSheet("font-size: 24px; padding: 5px; letter-spacing: 2px;")
+        else:
+            # Si está vacío (placeholder visible), usar fuente normal
+            self.last_vault_password.setStyleSheet("font-size: 14px; padding: 10px;")
 
     def showEvent(self, event):
         """Limpiar el campo de contraseña cada vez que se muestre la pantalla."""
