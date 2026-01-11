@@ -8,34 +8,29 @@ class EntryDialog(QDialog):
         self.setWindowTitle("Detalles de la Entrada")
         
         self.setModal(True)
-        self.resize(500, 600)  # Larger, modern size
+        self.resize(500, 600)
         
         layout = QVBoxLayout(self)
         layout.setSpacing(16)
         layout.setContentsMargins(24, 24, 24, 24)
 
-        # Header
         header = QLabel(title or "Detalles de la Entrada")
         header.setStyleSheet("font-size: 20px; font-weight: bold; margin-bottom: 10px;")
         layout.addWidget(header)
         
-        # Form Container
         form_layout = QVBoxLayout()
         form_layout.setSpacing(12)
 
-        # Title
         form_layout.addWidget(QLabel("Título"))
         self.title_input = QLineEdit(title)
         self.title_input.setPlaceholderText("ej. Cuenta de Google")
         form_layout.addWidget(self.title_input)
         
-        # Username
         form_layout.addWidget(QLabel("Usuario"))
         self.user_input = QLineEdit(username)
         self.user_input.setPlaceholderText("email@example.com")
         form_layout.addWidget(self.user_input)
         
-        # Password with Toggle
         form_layout.addWidget(QLabel("Contraseña"))
         pass_layout = QHBoxLayout()
         self.pass_input = QLineEdit(password)
@@ -49,7 +44,7 @@ class EntryDialog(QDialog):
         
         self.gen_btn = QPushButton("Generar")
         self.gen_btn.setFixedWidth(80)
-        self.gen_btn.setStyleSheet("background-color: #2d2d2d; border: 1px solid #555555;")
+        self.gen_btn.setStyleSheet("background-color:
         self.gen_btn.clicked.connect(self.generate_password)
         
         pass_layout.addWidget(self.pass_input)
@@ -57,25 +52,22 @@ class EntryDialog(QDialog):
         pass_layout.addWidget(self.gen_btn)
         form_layout.addLayout(pass_layout)
 
-        # URL
         form_layout.addWidget(QLabel("URL"))
         self.url_input = QLineEdit(url)
         self.url_input.setPlaceholderText("https://example.com")
         form_layout.addWidget(self.url_input)
         
-        # Notes
         form_layout.addWidget(QLabel("Notes"))
         self.notes_input = QTextEdit()
         self.notes_input.setPlainText(notes)
         self.notes_input.setPlaceholderText("Additional details...")
-        self.notes_input.setFixedHeight(120)  # Reasonable height for notes
+        self.notes_input.setFixedHeight(120)
         form_layout.addWidget(self.notes_input)
         
         layout.addLayout(form_layout)
         
         layout.addStretch()
 
-        # Buttons
         btn_layout = QHBoxLayout()
         btn_layout.setSpacing(12)
         btn_layout.addStretch()
@@ -84,7 +76,7 @@ class EntryDialog(QDialog):
         self.cancel_btn.clicked.connect(self.reject)
         
         self.save_btn = QPushButton("Guardar")
-        self.save_btn.setProperty("role", "primary")  # Use primary style
+        self.save_btn.setProperty("role", "primary")
         self.save_btn.clicked.connect(self.accept)
         
         btn_layout.addWidget(self.cancel_btn)
@@ -104,12 +96,11 @@ class EntryDialog(QDialog):
         import secrets
         import string
         
-        alphabet = string.ascii_letters + string.digits + "!@#$%^&*"
+        alphabet = string.ascii_letters + string.digits + "!@
         password = ''.join(secrets.choice(alphabet) for i in range(20))
         
         self.pass_input.setText(password)
         
-        # Auto-show
         self.pass_input.setEchoMode(QLineEdit.EchoMode.Normal)
         self.toggle_btn.setChecked(True)
         self.toggle_btn.setText("Ocultar")

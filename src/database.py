@@ -10,21 +10,16 @@ class Database:
 
     def create(self, filepath, password, keyfile=None):
         """Create a new KDBX database."""
-        # Clean up if overwriting to avoid issues with existing files
         if os.path.exists(filepath):
             os.remove(filepath)
             
         self.kp = create_database(filepath, password=password, keyfile=keyfile)
         
-        # Optimize KDF for faster performance (reduce Argon2 iterations)
-        # Default is very high for security but slow for personal use
-        # This reduces login time significantly
         if hasattr(self.kp, 'kdf'):
-            # Reduce iterations from default (usually millions) to something reasonable
             try:
-                self.kp.kdf.iterations = 2  # Much faster, still secure for personal use
+                self.kp.kdf.iterations = 2
             except AttributeError:
-                pass  # If KDF doesn't support this, skip
+                pass
         
         self.filepath = filepath
         self.password = password
@@ -37,17 +32,14 @@ class Database:
             self.filepath = filepath
             self.password = password
             
-            # Optimize KDF for faster future loads (one-time optimization)
-            # This will make subsequent opens much faster
             if hasattr(self.kp, 'kdf'):
                 try:
                     current_iterations = getattr(self.kp.kdf, 'iterations', None)
-                    # If iterations are high, reduce them for faster loading
                     if current_iterations and current_iterations > 10:
                         self.kp.kdf.iterations = 2
-                        self.save()  # Save optimized KDF
+                        self.save()
                 except (AttributeError, TypeError):
-                    pass  # If KDF doesn't support this, skip
+                    pass
             
             return True
         except Exception as e:

@@ -1,109 +1,109 @@
 
 DARK_THEME = """
 QWidget {
-    background-color: #1e1e1e;
-    color: #ffffff;
+    background-color:
+    color:
     font-family: 'Segoe UI', sans-serif;
     font-size: 14px;
 }
 
 /* Dialogs */
 QDialog {
-    background-color: #252526;
+    background-color:
 }
 
 /* Inputs */
 QLineEdit, QTextEdit {
-    background-color: #333333;
-    border: 1px solid #555555;
+    background-color:
+    border: 1px solid
     border-radius: 6px;
     padding: 8px;
-    color: #ffffff;
-    selection-background-color: #264f78;
+    color:
+    selection-background-color:
 }
 
 QLineEdit:focus, QTextEdit:focus {
-    border: 1px solid #007acc;
-    background-color: #3c3c3c;
+    border: 1px solid
+    background-color:
 }
 
 /* GroupBox/Labels */
 QLabel {
-    color: #cccccc;
+    color:
     font-weight: 500;
 }
 
 /* List/Tree/Table */
 QTableWidget, QTreeWidget, QListWidget {
-    background-color: #252526;
-    border: 1px solid #3e3e42;
-    gridline-color: #3e3e42;
-    selection-background-color: #37373d;
-    selection-color: #ffffff;
+    background-color:
+    border: 1px solid
+    gridline-color:
+    selection-background-color:
+    selection-color:
 }
 
 QHeaderView::section {
-    background-color: #333333;
+    background-color:
     padding: 6px;
     border: none;
-    border-bottom: 1px solid #3e3e42;
+    border-bottom: 1px solid
 }
 
 /* Buttons */
 QPushButton {
-    background-color: #3c3c3c;
-    border: 1px solid #555555;
+    background-color:
+    border: 1px solid
     border-radius: 6px;
     padding: 8px 16px;
     min-width: 80px;
 }
 
 QPushButton:hover {
-    background-color: #4a4a4a;
+    background-color:
 }
 
 QPushButton:pressed {
-    background-color: #2d2d2d;
+    background-color:
 }
 
 /* Primary Button Action */
 QPushButton[role="primary"] {
-    background-color: #0e639c;
-    border: 1px solid #0e639c;
+    background-color:
+    border: 1px solid
     color: white;
     font-weight: bold;
 }
 
 QPushButton[role="primary"]:hover {
-    background-color: #1177bb;
+    background-color:
 }
 
 /* Danger Button */
 QPushButton[role="danger"] {
-    background-color: #ce3131;
-    border: 1px solid #ce3131;
+    background-color:
+    border: 1px solid
 }
 
 /* Menu Bar */
 QMenuBar {
-    background-color: #333333;
-    color: #ffffff;
+    background-color:
+    color:
 }
 QMenuBar::item {
     padding: 6px 10px;
     background: transparent;
 }
 QMenuBar::item:selected {
-    background-color: #4a4a4a;
+    background-color:
 }
 QMenu {
-    background-color: #252526;
-    border: 1px solid #454545;
+    background-color:
+    border: 1px solid
 }
 QMenu::item {
     padding: 6px 24px;
 }
 QMenu::item:selected {
-    background-color: #37373d;
+    background-color:
 }
 """

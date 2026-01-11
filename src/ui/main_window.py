@@ -16,35 +16,30 @@ class MainWindow(QMainWindow):
         
         self.db = db_helper
         
-        # Clipboard timer
         self.clipboard_timer = QTimer(self)
         self.clipboard_timer.timeout.connect(self.update_clipboard_countdown)
         self.clipboard_remaining = 0
         
-        # Central Widget
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         
         self.layout = QVBoxLayout(self.central_widget)
 
-        # Menu Bar
         self.create_menu_bar()
         
-        # Header / Status
         self.header_layout = QHBoxLayout()
         self.db_label = QLabel(f"Bóveda: {self.db.filepath}")
-        self.db_label.setStyleSheet("color: #888888; font-weight: bold;")
+        self.db_label.setStyleSheet("color:")
         self.header_layout.addWidget(self.db_label)
         self.header_layout.addStretch()
         
         self.logout_btn = QPushButton("Cerrar Bóveda")
-        self.logout_btn.setStyleSheet("background-color: #d32f2f; padding: 4px 12px;")
+        self.logout_btn.setStyleSheet("background-color:")
         self.logout_btn.clicked.connect(self.logout)
         self.header_layout.addWidget(self.logout_btn)
         
         self.layout.addLayout(self.header_layout)
 
-        # Toolbar
         self.toolbar_layout = QHBoxLayout()
         
         self.add_btn = QPushButton("+ Agregar Entrada")
@@ -52,22 +47,21 @@ class MainWindow(QMainWindow):
         self.toolbar_layout.addWidget(self.add_btn)
         
         self.refresh_btn = QPushButton("Actualizar")
-        self.refresh_btn.setStyleSheet("background-color: #333333;")
+        self.refresh_btn.setStyleSheet("background-color:")
         self.refresh_btn.clicked.connect(self.load_entries)
         self.toolbar_layout.addWidget(self.refresh_btn)
 
         self.toolbar_layout.addStretch()
         self.layout.addLayout(self.toolbar_layout)
         
-        # Table
         self.table = QTableWidget()
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(["UUID", "Título", "Usuario", "URL", "Notas"])
-        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch) # Title stretches
-        self.table.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch) # Notes stretches
+        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
-        self.table.hideColumn(0) # Hide UUID
+        self.table.hideColumn(0)
         self.table.verticalHeader().setVisible(False)
         self.table.setAlternatingRowColors(False)
         self.table.setShowGrid(False)
@@ -77,9 +71,8 @@ class MainWindow(QMainWindow):
         
         self.layout.addWidget(self.table)
         
-        # Status Bar
         self.status_bar = self.statusBar()
-        self.status_bar.setStyleSheet("color: #888888;")
+        self.status_bar.setStyleSheet("color:")
         
         self.load_entries()
 
@@ -91,7 +84,6 @@ class MainWindow(QMainWindow):
         self.table.setRowCount(0)
         entries = self.db.get_entries()
         
-        # Sort entries by title for better UX
         entries_list = list(entries)
         entries_list.sort(key=lambda x: x.title if x.title else "")
 
@@ -131,7 +123,6 @@ class MainWindow(QMainWindow):
         row = selected_items[0].row()
         uuid_str = self.table.item(row, 0).text()
         
-        # PyKeePass lookup
         import uuid
         entry = self.db.kp.find_entries(uuid=uuid.UUID(uuid_str), first=True)
         if not entry:
@@ -176,7 +167,7 @@ class MainWindow(QMainWindow):
             return
         
         row = selected_items[0].row()
-        url = self.table.item(row, 3).text()  # URL column
+        url = self.table.item(row, 3).text()
         
         menu = QMenu()
         edit_action = menu.addAction("Editar")
@@ -185,7 +176,6 @@ class MainWindow(QMainWindow):
         copy_user_action = menu.addAction("Copiar Usuario")
         copy_pass_action = menu.addAction("Copiar Contraseña")
         
-        # Only show "Copy URL" if URL exists
         copy_url_action = None
         if url and url.strip():
             copy_url_action = menu.addAction("Copiar URL")
@@ -197,11 +187,11 @@ class MainWindow(QMainWindow):
         elif action == delete_action:
             self.delete_entry()
         elif action == copy_user_action:
-            self.copy_field(2) # Username column
+            self.copy_field(2)
         elif action == copy_pass_action:
             self.copy_password()
         elif copy_url_action and action == copy_url_action:
-            self.copy_field(3) # URL column
+            self.copy_field(3)
 
     def copy_field(self, col_index):
         selected_items = self.table.selectedItems()
@@ -244,7 +234,6 @@ class MainWindow(QMainWindow):
     def create_menu_bar(self):
         menubar = self.menuBar()
 
-        # File Menu
         file_menu = menubar.addMenu("&Archivo")
 
         save_action = QAction("&Guardar", self)
@@ -263,7 +252,6 @@ class MainWindow(QMainWindow):
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
 
-        # Edit Menu
         edit_menu = menubar.addMenu("&Editar")
 
         add_action = QAction("&Agregar Entrada", self)
@@ -290,7 +278,6 @@ class MainWindow(QMainWindow):
         copy_pass_action.triggered.connect(self.copy_password)
         edit_menu.addAction(copy_pass_action)
 
-        # Help Menu
         help_menu = menubar.addMenu("A&yuda")
 
         about_action = QAction("&Acerca de", self)

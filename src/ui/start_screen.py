@@ -4,13 +4,12 @@ from PySide6.QtCore import Qt, Signal, QSettings
 import os
 
 class StartScreen(QWidget):
-    open_db_signal = Signal(str, str) # filepath, password
-    create_db_signal = Signal(str, str) # filepath, password
+    open_db_signal = Signal(str, str)
+    create_db_signal = Signal(str, str)
 
     def __init__(self, parent=None):
         super().__init__(parent)
         
-        # Settings
         self.settings = QSettings("Keyflow", "KeyflowApp")
         self.last_vault = self.settings.value("last_vault", "")
         
@@ -18,36 +17,31 @@ class StartScreen(QWidget):
         layout.setContentsMargins(50, 50, 50, 50)
         layout.setSpacing(20)
 
-        # Title
         title = QLabel("Keyflow")
-        title.setStyleSheet("font-size: 32px; font-weight: bold; color: #007acc; margin-bottom: 20px;")
+        title.setStyleSheet("font-size: 32px; font-weight: bold; color:
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
         
         subtitle = QLabel("Gestor Seguro de Contraseñas")
-        subtitle.setStyleSheet("font-size: 16px; color: #888888; margin-bottom: 40px;")
+        subtitle.setStyleSheet("font-size: 16px; color:
         subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(subtitle)
 
 
         layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-        # Last vault quick access (if exists)
         if self.last_vault and os.path.exists(self.last_vault):
             vault_name = os.path.basename(self.last_vault)
             
-            # Container for last vault
             last_vault_container = QWidget()
             last_vault_layout = QVBoxLayout(last_vault_container)
             last_vault_layout.setSpacing(10)
             
-            # Label
             vault_label = QLabel(f"Última Bóveda: {vault_name}")
-            vault_label.setStyleSheet("font-size: 14px; font-weight: bold; color: #007acc;")
+            vault_label.setStyleSheet("font-size: 14px; font-weight: bold; color:
             vault_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             last_vault_layout.addWidget(vault_label)
             
-            # Password input
             self.last_vault_password = QLineEdit()
             self.last_vault_password.setPlaceholderText("Contraseña Maestra")
             self.last_vault_password.setEchoMode(QLineEdit.EchoMode.Password)
@@ -55,17 +49,16 @@ class StartScreen(QWidget):
             self.last_vault_password.returnPressed.connect(self.open_last_vault)
             last_vault_layout.addWidget(self.last_vault_password)
             
-            # Open button
             open_last_btn = QPushButton("Abrir Bóveda")
             open_last_btn.setMinimumHeight(50)
             open_last_btn.setStyleSheet("""
                 QPushButton {
-                    background-color: #0e639c;
-                    border: 1px solid #0e639c;
+                    background-color:
+                    border: 1px solid
                     font-weight: bold;
                 }
                 QPushButton:hover {
-                    background-color: #1177bb;
+                    background-color:
                 }
             """)
             open_last_btn.setCursor(Qt.CursorShape.PointingHandCursor)

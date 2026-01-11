@@ -162,7 +162,7 @@ Las contribuciones son bienvenidas! Si encuentras un bug o tienes una sugerencia
 
 ## 📝 Licencia
 
-Distribuido bajo la Licencia MIT. Ver `LICENSE` para más información.
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
 
 ---
 
@@ -173,14 +173,6 @@ Distribuido bajo la Licencia MIT. Ver `LICENSE` para más información.
 - GitHub: [@Maalfer](https://github.com/Maalfer)
 - LinkedIn: [maalfer1](https://www.linkedin.com/in/maalfer1/)
 - Proyecto: [Keyflow](https://github.com/Maalfer/keyflow)
-
----
-
-## 🙏 Agradecimientos
-
-- [KeePass](https://keepass.info/) por el formato `.kdbx`
-- [pykeepass](https://github.com/libkeepass/pykeepass) por la biblioteca Python
-- [PySide6](https://www.qt.io/qt-for-python) por el framework GUI
 
 ---
 
