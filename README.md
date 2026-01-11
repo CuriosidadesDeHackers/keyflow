@@ -52,40 +52,6 @@ Keyflow es un gestor de contraseñas moderno desarrollado con Python y PySide6 q
 
 1. **Clonar el repositorio**:
 ```bash
-git clone https://github.com/Maalfer/keyflow.git
-cd keyflow
-```
-
-2. **Crear entorno virtual** (recomendado):
-```bash
-python3 -m venv venv
-source venv/bin/activate  # En Linux/Mac
-# venv\Scripts\activate   # En Windows
-```
-
-3. **Instalar dependencias**:
-```bash
-pip install -r requirements.txt
-```
-
-4. **Ejecutar la aplicación**:
-```bash
-python main.py
-```
-
----
-
-## 📦 Instalación desde Paquete .deb (Debian/Ubuntu)
-
-### Opción 1: Instalar pre-compilado
-
-Si tienes el archivo `.deb` pre-compilado:
-
-```bash
-# Instalar el paquete
-sudo dpkg -i keyflow_1.0.0_all.deb
-
-# Instalar dependencias faltantes (si las hay)
 sudo apt-get install -f
 ```
 
