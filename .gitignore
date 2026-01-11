@@ -38,6 +38,14 @@ debian-package/
 *.rpm
 *.msi
 *.dmg
+*.snap
+
+# Snapcraft
+parts/
+stage/
+prime/
+.snapcraft/
+*_source.tar.bz2
 
 # KeePass Database Files (personal data)
 *.kdbx

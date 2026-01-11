@@ -72,14 +72,15 @@ class MainWindow(QMainWindow):
         self.layout.addLayout(self.toolbar_layout)
         
         self.table = QTableWidget()
-        self.table.setColumnCount(5)
-        self.table.setHorizontalHeaderLabels(["UUID", "Título", "Usuario", "URL", "Notas"])
+        self.table.setColumnCount(6)
+        self.table.setHorizontalHeaderLabels(["UUID", "Título", "Usuario", "URL", "Notas", "Modificado"])
         
         # Configurar anchos de columna
         self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch) # Título ocupa el espacio disponible
-        self.table.setColumnWidth(2, 250) # Usuario más ancho
-        self.table.setColumnWidth(3, 200) # URL
-        self.table.setColumnWidth(4, 150) # Notas más estrecho
+        self.table.setColumnWidth(2, 200) # Usuario
+        self.table.setColumnWidth(3, 180) # URL
+        self.table.setColumnWidth(4, 150) # Notas
+        self.table.setColumnWidth(5, 150) # Modificado
         
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
@@ -90,6 +91,9 @@ class MainWindow(QMainWindow):
         self.table.doubleClicked.connect(self.edit_entry)
         self.table.setContextMenuPolicy(Qt.CustomContextMenu)
         self.table.customContextMenuRequested.connect(self.show_context_menu)
+        
+        # Permitir ordenar por columnas al hacer clic en los encabezados
+        self.table.setSortingEnabled(True)
         
         self.layout.addWidget(self.table)
         
@@ -148,6 +152,10 @@ class MainWindow(QMainWindow):
     
     def display_entries(self, entries):
         """Muestra las entradas proporcionadas en la tabla"""
+        # Desactivar sorting durante la actualización para evitar problemas de índices y rendimiento
+        sorting_enabled = self.table.isSortingEnabled()
+        self.table.setSortingEnabled(False)
+        
         self.table.setRowCount(0)
         
         for row, entry in enumerate(entries):
@@ -162,6 +170,11 @@ class MainWindow(QMainWindow):
             
             # Combinar emoji con título
             display_title = f"{emoji} {title}" if emoji else title
+            
+            # Formatear fecha de modificación
+            mtime_str = ""
+            if hasattr(entry, 'mtime') and entry.mtime:
+                mtime_str = entry.mtime.strftime("%Y-%m-%d %H:%M")
 
             self.table.insertRow(row)
             self.table.setItem(row, 0, QTableWidgetItem(uuid))
@@ -169,6 +182,7 @@ class MainWindow(QMainWindow):
             self.table.setItem(row, 2, QTableWidgetItem(username))
             self.table.setItem(row, 3, QTableWidgetItem(url))
             self.table.setItem(row, 4, QTableWidgetItem(notes))
+            self.table.setItem(row, 5, QTableWidgetItem(mtime_str))
         
         # Actualizar la barra de estado con el número de entradas mostradas
         total = len(self.all_entries)
@@ -177,6 +191,8 @@ class MainWindow(QMainWindow):
             self.status_bar.showMessage(f"Mostrando {shown} de {total} entradas", 3000)
         else:
             self.status_bar.clearMessage()
+            
+        self.table.setSortingEnabled(sorting_enabled)
 
     def add_entry(self):
         dialog = EntryDialog(self, title="New Entry")

@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel, 
-                               QFileDialog, QInputDialog, QMessageBox, QSpacerItem, QSizePolicy, QLineEdit)
+                               QFileDialog, QInputDialog, QMessageBox, QSpacerItem, QSizePolicy, QLineEdit, QHBoxLayout)
 from PySide6.QtCore import Qt, Signal, QSettings
 import os
 
@@ -42,12 +42,26 @@ class StartScreen(QWidget):
             vault_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             last_vault_layout.addWidget(vault_label)
             
+            password_layout = QHBoxLayout()
+            password_layout.setSpacing(10)
+
             self.last_vault_password = QLineEdit()
             self.last_vault_password.setPlaceholderText("Contraseña Maestra")
             self.last_vault_password.setEchoMode(QLineEdit.EchoMode.Password)
-            self.last_vault_password.setMinimumHeight(40)
+            self.last_vault_password.setMinimumHeight(45)
+            # Aumentar tamaño de fuente para que los puntos/asteriscos se vean más grandes
+            self.last_vault_password.setStyleSheet("font-size: 24px; padding: 5px; letter-spacing: 2px;")
             self.last_vault_password.returnPressed.connect(self.open_last_vault)
-            last_vault_layout.addWidget(self.last_vault_password)
+            password_layout.addWidget(self.last_vault_password)
+
+            self.toggle_visibility_btn = QPushButton("👁️")
+            self.toggle_visibility_btn.setMinimumHeight(45)
+            self.toggle_visibility_btn.setFixedWidth(50)
+            self.toggle_visibility_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+            self.toggle_visibility_btn.clicked.connect(self.toggle_password_visibility)
+            password_layout.addWidget(self.toggle_visibility_btn)
+
+            last_vault_layout.addLayout(password_layout)
             
             open_last_btn = QPushButton("Abrir Bóveda")
             open_last_btn.setMinimumHeight(50)
@@ -106,3 +120,21 @@ class StartScreen(QWidget):
                 self.open_db_signal.emit(self.last_vault, pwd)
             else:
                 QMessageBox.warning(self, "Error", "La contraseña no puede estar vacía")
+
+    def toggle_password_visibility(self):
+        if self.last_vault_password.echoMode() == QLineEdit.EchoMode.Password:
+            self.last_vault_password.setEchoMode(QLineEdit.EchoMode.Normal)
+            self.toggle_visibility_btn.setText("🔒")
+        else:
+            self.last_vault_password.setEchoMode(QLineEdit.EchoMode.Password)
+            self.toggle_visibility_btn.setText("👁️")
+
+    def showEvent(self, event):
+        """Limpiar el campo de contraseña cada vez que se muestre la pantalla."""
+        super().showEvent(event)
+        if hasattr(self, 'last_vault_password'):
+            self.last_vault_password.clear()
+            self.last_vault_password.setEchoMode(QLineEdit.EchoMode.Password)
+            if hasattr(self, 'toggle_visibility_btn'):
+                self.toggle_visibility_btn.setText("👁️")
+            self.last_vault_password.setFocus()
