@@ -1,0 +1,4 @@
+flet>=0.23.0
+pykeepass>=4.0.0
+pycryptodome>=3.19.0
+pyperclip>=1.11.0
