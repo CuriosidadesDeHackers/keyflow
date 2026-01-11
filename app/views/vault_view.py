@@ -3,6 +3,12 @@ Vista del vault (bóveda de contraseñas)
 Muestra y gestiona todas las contraseñas
 """
 import flet as ft
+import subprocess
+import platform
+try:
+    import pyperclip
+except ImportError:
+    pyperclip = None
 
 
 
@@ -178,18 +184,55 @@ class VaultView(ft.Container):
     
     def copy_password(self, password: str):
         """Copiar contraseña al portapapeles"""
-        try:
-            # Compatibilidad con diferentes versiones de Flet
-            if hasattr(self._page, 'set_clipboard'):
-                self._page.set_clipboard(password)
-            else:
-                self._page.clipboard = password
-            
-            self._page.update()
+        if self.copy_to_clipboard(password):
             self.show_snackbar("Contraseña copiada al portapapeles", "#4caf50")
-        except Exception as e:
-            print(f"Error al copiar: {e}")
-            self.show_snackbar("Error al copiar contraseña", "#f44336")
+        else:
+            self.show_snackbar("Error: No se encontró herramienta de portapapeles (instala xclip)", "#f44336")
+
+    def copy_to_clipboard(self, text: str) -> bool:
+        """Intenta copiar al portapapeles usando múltiples estrategias"""
+        # Etrategia 1: Pyperclip (si está disponible)
+        if pyperclip:
+            try:
+                pyperclip.copy(text)
+                return True
+            except Exception as e:
+                print(f"Pyperclip falló: {e}")
+        
+        # Estrategia 2: Herramientas CLI de Linux
+        if platform.system() == "Linux":
+            commands = [
+                ["xclip", "-selection", "clipboard"],
+                ["xsel", "--clipboard", "--input"],
+                ["wl-copy"]
+            ]
+            
+            for cmd in commands:
+                try:
+                    process = subprocess.Popen(cmd, stdin=subprocess.PIPE, close_fds=True)
+                    process.communicate(input=text.encode('utf-8'))
+                    if process.returncode == 0:
+                        return True
+                except FileNotFoundError:
+                    continue
+                except Exception as e:
+                    print(f"Comando {cmd[0]} falló: {e}")
+                    
+        # Estrategia 3: Fallback a Flet (aunque sabemos que falla en esta versión, por si acaso)
+        try:
+            if hasattr(self._page, 'set_clipboard'):
+                self._page.set_clipboard(text)
+                return True
+            else:
+                self._page.clipboard = text
+                self._page.update()
+                return True
+        except:
+            pass
+            
+        print("Todas las estrategias de portapapeles fallaron")
+        return False
+
     
     def on_search(self, e):
         """Buscar contraseñas"""
