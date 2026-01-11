@@ -23,7 +23,7 @@ class VaultView(ft.Container):
             border_radius=10,
             bgcolor="#2b2b2b",
             on_change=self.on_search,
-            expand=True,
+
         )
         
         # Lista de contraseñas
