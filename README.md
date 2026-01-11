@@ -126,7 +126,6 @@ keyflow/
 │       ├── entry_dialog.py   # Diálogo de entrada
 │       ├── login_window.py   # Ventana de login
 │       └── styles.py         # Estilos CSS/QSS
-├── tests/               # Tests unitarios
 ├── main.py             # Punto de entrada
 ├── requirements.txt    # Dependencias
 └── README.md           # Este archivo
