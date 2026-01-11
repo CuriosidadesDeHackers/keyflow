@@ -5,7 +5,7 @@ from PySide6.QtCore import Qt
 class EntryDialog(QDialog):
     def __init__(self, parent=None, title="", username="", password="", url="", notes=""):
         super().__init__(parent)
-        self.setWindowTitle("Entry Details")
+        self.setWindowTitle("Detalles de la Entrada")
         
         self.setModal(True)
         self.resize(500, 600)  # Larger, modern size
@@ -15,7 +15,7 @@ class EntryDialog(QDialog):
         layout.setContentsMargins(24, 24, 24, 24)
 
         # Header
-        header = QLabel(title or "Entry Details")
+        header = QLabel(title or "Detalles de la Entrada")
         header.setStyleSheet("font-size: 20px; font-weight: bold; margin-bottom: 10px;")
         layout.addWidget(header)
         
@@ -24,30 +24,30 @@ class EntryDialog(QDialog):
         form_layout.setSpacing(12)
 
         # Title
-        form_layout.addWidget(QLabel("Title"))
+        form_layout.addWidget(QLabel("Título"))
         self.title_input = QLineEdit(title)
-        self.title_input.setPlaceholderText("e.g. Google Account")
+        self.title_input.setPlaceholderText("ej. Cuenta de Google")
         form_layout.addWidget(self.title_input)
         
         # Username
-        form_layout.addWidget(QLabel("Username"))
+        form_layout.addWidget(QLabel("Usuario"))
         self.user_input = QLineEdit(username)
         self.user_input.setPlaceholderText("email@example.com")
         form_layout.addWidget(self.user_input)
         
         # Password with Toggle
-        form_layout.addWidget(QLabel("Password"))
+        form_layout.addWidget(QLabel("Contraseña"))
         pass_layout = QHBoxLayout()
         self.pass_input = QLineEdit(password)
         self.pass_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.pass_input.setPlaceholderText("••••••••")
         
-        self.toggle_btn = QPushButton("Show")
+        self.toggle_btn = QPushButton("Mostrar")
         self.toggle_btn.setCheckable(True)
         self.toggle_btn.setFixedWidth(60)
         self.toggle_btn.clicked.connect(self.toggle_password)
         
-        self.gen_btn = QPushButton("Generate")
+        self.gen_btn = QPushButton("Generar")
         self.gen_btn.setFixedWidth(80)
         self.gen_btn.setStyleSheet("background-color: #2d2d2d; border: 1px solid #555555;")
         self.gen_btn.clicked.connect(self.generate_password)
@@ -80,10 +80,10 @@ class EntryDialog(QDialog):
         btn_layout.setSpacing(12)
         btn_layout.addStretch()
         
-        self.cancel_btn = QPushButton("Cancel")
+        self.cancel_btn = QPushButton("Cancelar")
         self.cancel_btn.clicked.connect(self.reject)
         
-        self.save_btn = QPushButton("Save")
+        self.save_btn = QPushButton("Guardar")
         self.save_btn.setProperty("role", "primary")  # Use primary style
         self.save_btn.clicked.connect(self.accept)
         
@@ -95,10 +95,10 @@ class EntryDialog(QDialog):
     def toggle_password(self, checked):
         if checked:
             self.pass_input.setEchoMode(QLineEdit.EchoMode.Normal)
-            self.toggle_btn.setText("Hide")
+            self.toggle_btn.setText("Ocultar")
         else:
             self.pass_input.setEchoMode(QLineEdit.EchoMode.Password)
-            self.toggle_btn.setText("Show")
+            self.toggle_btn.setText("Mostrar")
 
     def generate_password(self):
         import secrets
@@ -112,7 +112,7 @@ class EntryDialog(QDialog):
         # Auto-show
         self.pass_input.setEchoMode(QLineEdit.EchoMode.Normal)
         self.toggle_btn.setChecked(True)
-        self.toggle_btn.setText("Hide")
+        self.toggle_btn.setText("Ocultar")
 
     def get_data(self):
         return (

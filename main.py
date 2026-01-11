@@ -36,14 +36,14 @@ class KeyflowApp(QApplication):
             self.db.create(filepath, password)
             self.show_main_window()
         except Exception as e:
-            QMessageBox.critical(self.stack, "Error", f"Could not create database: {e}")
+            QMessageBox.critical(self.stack, "Error", f"No se pudo crear la base de datos: {e}")
 
     def open_db(self, filepath, password):
         try:
             self.db.load(filepath, password)
             self.show_main_window()
         except Exception as e:
-            QMessageBox.critical(self.stack, "Error", "Invalid password or corrupted file.")
+            QMessageBox.critical(self.stack, "Error", "Contraseña inválida o archivo corrupto.")
 
     def show_main_window(self):
         self.main_window = MainWindow(self.db)

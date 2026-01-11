@@ -19,7 +19,7 @@ class StartScreen(QWidget):
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
         
-        subtitle = QLabel("Secure Password Manager")
+        subtitle = QLabel("Gestor Seguro de Contraseñas")
         subtitle.setStyleSheet("font-size: 16px; color: #888888; margin-bottom: 40px;")
         subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(subtitle)
@@ -27,13 +27,13 @@ class StartScreen(QWidget):
         layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
         # Buttons
-        self.create_btn = QPushButton("Create New Database")
+        self.create_btn = QPushButton("Crear Nueva Base de Datos")
         self.create_btn.setMinimumHeight(50)
         self.create_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.create_btn.clicked.connect(self.create_db)
         layout.addWidget(self.create_btn)
 
-        self.open_btn = QPushButton("Open Existing Database")
+        self.open_btn = QPushButton("Abrir Base de Datos Existente")
         self.open_btn.setMinimumHeight(50)
         self.open_btn.setStyleSheet("""
             QPushButton {
@@ -51,24 +51,24 @@ class StartScreen(QWidget):
         layout.addSpacerItem(QSpacerItem(20, 60, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
     def create_db(self):
-        filepath, _ = QFileDialog.getSaveFileName(self, "Create New Database", "", "KeePass Databases (*.kdbx)")
+        filepath, _ = QFileDialog.getSaveFileName(self, "Crear Nueva Base de Datos", "", "Bases de Datos KeePass (*.kdbx)")
         if filepath:
             if not filepath.endswith(".kdbx"):
                 filepath += ".kdbx"
             
-            pwd, ok = QInputDialog.getText(self, "Set Master Password", "Enter Master Password:", echo=QLineEdit.EchoMode.Password)
+            pwd, ok = QInputDialog.getText(self, "Establecer Contraseña Maestra", "Ingrese Contraseña Maestra:", echo=QLineEdit.EchoMode.Password)
             if ok and pwd:
-                confirm, ok2 = QInputDialog.getText(self, "Confirm Password", "Confirm Master Password:", echo=QLineEdit.EchoMode.Password)
+                confirm, ok2 = QInputDialog.getText(self, "Confirmar Contraseña", "Confirmar Contraseña Maestra:", echo=QLineEdit.EchoMode.Password)
                 if ok2 and confirm == pwd:
                     self.create_db_signal.emit(filepath, pwd)
                 elif ok2:
-                     QMessageBox.warning(self, "Error", "Passwords do not match")
+                     QMessageBox.warning(self, "Error", "Las contraseñas no coinciden")
             elif ok:
-                 QMessageBox.warning(self, "Error", "Password cannot be empty")
+                 QMessageBox.warning(self, "Error", "La contraseña no puede estar vacía")
 
     def open_db(self):
-        filepath, _ = QFileDialog.getOpenFileName(self, "Open Database", "", "KeePass Databases (*.kdbx)")
+        filepath, _ = QFileDialog.getOpenFileName(self, "Abrir Base de Datos", "", "Bases de Datos KeePass (*.kdbx)")
         if filepath:
-            pwd, ok = QInputDialog.getText(self, "Enter Master Password", "Master Password:", echo=QLineEdit.EchoMode.Password)
+            pwd, ok = QInputDialog.getText(self, "Ingresar Contraseña Maestra", "Contraseña Maestra:", echo=QLineEdit.EchoMode.Password)
             if ok:
                 self.open_db_signal.emit(filepath, pwd)
