@@ -1,5 +1,7 @@
 import sys
 from PySide6.QtWidgets import QApplication, QStackedWidget, QMessageBox
+from PySide6.QtCore import QSettings
+from PySide6.QtGui import QIcon
 from src.database import Database
 from src.ui.start_screen import StartScreen
 from src.ui.main_window import MainWindow
@@ -17,10 +19,20 @@ class KeyflowApp(QApplication):
         
         self.db = Database()
         
+        # Settings for last vault
+        self.settings = QSettings("Keyflow", "KeyflowApp")
+        
         # Stacked Widget to manage screens
         self.stack = QStackedWidget()
         self.stack.setWindowTitle("Keyflow")
         self.stack.resize(900, 600)
+        
+        # Set application icon
+        import os
+        icon_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "logo.png")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QIcon(icon_path))
+            self.stack.setWindowIcon(QIcon(icon_path))
         
         # Screens
         self.start_screen = StartScreen()
@@ -34,6 +46,7 @@ class KeyflowApp(QApplication):
     def create_db(self, filepath, password):
         try:
             self.db.create(filepath, password)
+            self.settings.setValue("last_vault", filepath)
             self.show_main_window()
         except Exception as e:
             QMessageBox.critical(self.stack, "Error", f"No se pudo crear la base de datos: {e}")
@@ -41,6 +54,7 @@ class KeyflowApp(QApplication):
     def open_db(self, filepath, password):
         try:
             self.db.load(filepath, password)
+            self.settings.setValue("last_vault", filepath)
             self.show_main_window()
         except Exception as e:
             QMessageBox.critical(self.stack, "Error", "Contraseña inválida o archivo corrupto.")

@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel, 
                                QFileDialog, QInputDialog, QMessageBox, QSpacerItem, QSizePolicy, QLineEdit)
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QSettings
 
 class StartScreen(QWidget):
     open_db_signal = Signal(str, str) # filepath, password
@@ -8,6 +8,10 @@ class StartScreen(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        
+        # Settings
+        self.settings = QSettings("Keyflow", "KeyflowApp")
+        self.last_vault = self.settings.value("last_vault", "")
         
         layout = QVBoxLayout(self)
         layout.setContentsMargins(50, 50, 50, 50)
@@ -25,6 +29,28 @@ class StartScreen(QWidget):
         layout.addWidget(subtitle)
 
         layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+
+        # Last vault button (if exists)
+        if self.last_vault and os.path.exists(self.last_vault):
+            import os
+            vault_name = os.path.basename(self.last_vault)
+            self.last_vault_btn = QPushButton(f"Abrir Última Bóveda: {vault_name}")
+            self.last_vault_btn.setMinimumHeight(50)
+            self.last_vault_btn.setStyleSheet("""
+                QPushButton {
+                    background-color: #0e639c;
+                    border: 1px solid #0e639c;
+                    font-weight: bold;
+                }
+                QPushButton:hover {
+                    background-color: #1177bb;
+                }
+            """)
+            self.last_vault_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+            self.last_vault_btn.clicked.connect(self.open_last_vault)
+            layout.addWidget(self.last_vault_btn)
+            
+            layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Fixed))
 
         # Buttons
         self.create_btn = QPushButton("Crear Nueva Base de Datos")
@@ -72,3 +98,8 @@ class StartScreen(QWidget):
             pwd, ok = QInputDialog.getText(self, "Ingresar Contraseña Maestra", "Contraseña Maestra:", echo=QLineEdit.EchoMode.Password)
             if ok:
                 self.open_db_signal.emit(filepath, pwd)
+
+    def open_last_vault(self):
+        pwd, ok = QInputDialog.getText(self, "Ingresar Contraseña Maestra", "Contraseña Maestra:", echo=QLineEdit.EchoMode.Password)
+        if ok:
+            self.open_db_signal.emit(self.last_vault, pwd)
