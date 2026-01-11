@@ -44,7 +44,7 @@ class EntryDialog(QDialog):
         
         self.gen_btn = QPushButton("Generar")
         self.gen_btn.setFixedWidth(80)
-        self.gen_btn.setStyleSheet("background-color:
+        self.gen_btn.setStyleSheet("background-color: #0e639c; padding: 4px 12px;")
         self.gen_btn.clicked.connect(self.generate_password)
         
         pass_layout.addWidget(self.pass_input)
@@ -96,7 +96,7 @@ class EntryDialog(QDialog):
         import secrets
         import string
         
-        alphabet = string.ascii_letters + string.digits + "!@
+        alphabet = string.ascii_letters + string.digits + "!@#$%^&*()"
         password = ''.join(secrets.choice(alphabet) for i in range(20))
         
         self.pass_input.setText(password)

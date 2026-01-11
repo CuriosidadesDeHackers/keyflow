@@ -18,12 +18,12 @@ class StartScreen(QWidget):
         layout.setSpacing(20)
 
         title = QLabel("Keyflow")
-        title.setStyleSheet("font-size: 32px; font-weight: bold; color:
+        title.setStyleSheet("font-size: 32px; font-weight: bold; color: #007acc; margin-bottom: 20px;")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
         
         subtitle = QLabel("Gestor Seguro de Contraseñas")
-        subtitle.setStyleSheet("font-size: 16px; color:
+        subtitle.setStyleSheet("font-size: 16px; color: #888888; margin-bottom: 40px;")
         subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(subtitle)
 
@@ -38,7 +38,7 @@ class StartScreen(QWidget):
             last_vault_layout.setSpacing(10)
             
             vault_label = QLabel(f"Última Bóveda: {vault_name}")
-            vault_label.setStyleSheet("font-size: 14px; font-weight: bold; color:
+            vault_label.setStyleSheet("font-size: 14px; font-weight: bold; color: #007acc;")
             vault_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             last_vault_layout.addWidget(vault_label)
             
@@ -53,12 +53,12 @@ class StartScreen(QWidget):
             open_last_btn.setMinimumHeight(50)
             open_last_btn.setStyleSheet("""
                 QPushButton {
-                    background-color:
-                    border: 1px solid
+                    background-color: #0e639c;
+                    border: 1px solid #0e639c;
                     font-weight: bold;
                 }
                 QPushButton:hover {
-                    background-color:
+                    background-color: #1177bb;
                 }
             """)
             open_last_btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -68,7 +68,6 @@ class StartScreen(QWidget):
             layout.addWidget(last_vault_container)
             layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Fixed))
 
-        # Buttons
         self.create_btn = QPushButton("Crear Nueva Base de Datos")
         self.create_btn.setMinimumHeight(50)
         self.create_btn.setCursor(Qt.CursorShape.PointingHandCursor)
