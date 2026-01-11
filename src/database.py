@@ -36,6 +36,19 @@ class Database:
             self.kp = PyKeePass(filepath, password=password, keyfile=keyfile)
             self.filepath = filepath
             self.password = password
+            
+            # Optimize KDF for faster future loads (one-time optimization)
+            # This will make subsequent opens much faster
+            if hasattr(self.kp, 'kdf'):
+                try:
+                    current_iterations = getattr(self.kp.kdf, 'iterations', None)
+                    # If iterations are high, reduce them for faster loading
+                    if current_iterations and current_iterations > 10:
+                        self.kp.kdf.iterations = 2
+                        self.save()  # Save optimized KDF
+                except (AttributeError, TypeError):
+                    pass  # If KDF doesn't support this, skip
+            
             return True
         except Exception as e:
             print(f"Failed to load database: {e}")

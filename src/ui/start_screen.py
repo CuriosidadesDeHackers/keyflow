@@ -29,14 +29,36 @@ class StartScreen(QWidget):
         subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(subtitle)
 
+
         layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-        # Last vault button (if exists)
+        # Last vault quick access (if exists)
         if self.last_vault and os.path.exists(self.last_vault):
             vault_name = os.path.basename(self.last_vault)
-            self.last_vault_btn = QPushButton(f"Abrir Última Bóveda: {vault_name}")
-            self.last_vault_btn.setMinimumHeight(50)
-            self.last_vault_btn.setStyleSheet("""
+            
+            # Container for last vault
+            last_vault_container = QWidget()
+            last_vault_layout = QVBoxLayout(last_vault_container)
+            last_vault_layout.setSpacing(10)
+            
+            # Label
+            vault_label = QLabel(f"Última Bóveda: {vault_name}")
+            vault_label.setStyleSheet("font-size: 14px; font-weight: bold; color: #007acc;")
+            vault_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            last_vault_layout.addWidget(vault_label)
+            
+            # Password input
+            self.last_vault_password = QLineEdit()
+            self.last_vault_password.setPlaceholderText("Contraseña Maestra")
+            self.last_vault_password.setEchoMode(QLineEdit.EchoMode.Password)
+            self.last_vault_password.setMinimumHeight(40)
+            self.last_vault_password.returnPressed.connect(self.open_last_vault)
+            last_vault_layout.addWidget(self.last_vault_password)
+            
+            # Open button
+            open_last_btn = QPushButton("Abrir Bóveda")
+            open_last_btn.setMinimumHeight(50)
+            open_last_btn.setStyleSheet("""
                 QPushButton {
                     background-color: #0e639c;
                     border: 1px solid #0e639c;
@@ -46,10 +68,11 @@ class StartScreen(QWidget):
                     background-color: #1177bb;
                 }
             """)
-            self.last_vault_btn.setCursor(Qt.CursorShape.PointingHandCursor)
-            self.last_vault_btn.clicked.connect(self.open_last_vault)
-            layout.addWidget(self.last_vault_btn)
+            open_last_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+            open_last_btn.clicked.connect(self.open_last_vault)
+            last_vault_layout.addWidget(open_last_btn)
             
+            layout.addWidget(last_vault_container)
             layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Fixed))
 
         # Buttons
@@ -99,7 +122,11 @@ class StartScreen(QWidget):
             if ok:
                 self.open_db_signal.emit(filepath, pwd)
 
+
     def open_last_vault(self):
-        pwd, ok = QInputDialog.getText(self, "Ingresar Contraseña Maestra", "Contraseña Maestra:", echo=QLineEdit.EchoMode.Password)
-        if ok:
-            self.open_db_signal.emit(self.last_vault, pwd)
+        if hasattr(self, 'last_vault_password'):
+            pwd = self.last_vault_password.text()
+            if pwd:
+                self.open_db_signal.emit(self.last_vault, pwd)
+            else:
+                QMessageBox.warning(self, "Error", "La contraseña no puede estar vacía")
