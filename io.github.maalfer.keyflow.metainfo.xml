@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.maalfer.keyflow</id>
+  
+  <name>Keyflow</name>
+  <summary>Gestor de contraseñas seguro y moderno</summary>
+  
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  
+  <description>
+    <p>
+      Keyflow es un gestor de contraseñas moderno y seguro compatible con el formato estándar KeePass (.kdbx).
+      Diseñado para ser intuitivo y fácil de usar, ofrece una interfaz limpia y oscura.
+    </p>
+    <p>Características principales:</p>
+    <ul>
+      <li>Compatibilidad total con archivos .kdbx</li>
+      <li>Cifrado robusto (AES-256, ChaCha20, Argon2)</li>
+      <li>Interfaz moderna con tema oscuro</li>
+      <li>Generador de contraseñas seguras integrado</li>
+      <li>Organización por grupos y búsqueda rápida</li>
+      <li>Limpieza automática del portapapeles</li>
+    </ul>
+  </description>
+  
+  <launchable type="desktop-id">io.github.maalfer.keyflow.desktop</launchable>
+  
+  <screenshots>
+    <screenshot type="default">
+      <caption>Pantalla principal de Keyflow</caption>
+      <image>https://raw.githubusercontent.com/Maalfer/keyflow/main/screenshots/main.png</image>
+    </screenshot>
+  </screenshots>
+  
+  <url type="homepage">https://github.com/Maalfer/keyflow</url>
+  <url type="bugtracker">https://github.com/Maalfer/keyflow/issues</url>
+  
+  <content_rating type="oars-1.1" />
+  
+  <releases>
+    <release version="1.0.0" date="2024-01-11">
+      <description>
+        <p>Lanzamiento inicial de Keyflow.</p>
+        <ul>
+          <li>Soporte básico para lectura/escritura de archivos .kdbx</li>
+          <li>Interfaz gráfica moderna con PySide6</li>
+          <li>Generador de contraseñas</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+</component>
