@@ -51,10 +51,7 @@ class MainWindow(QMainWindow):
         self.add_btn.clicked.connect(self.add_entry)
         self.toolbar_layout.addWidget(self.add_btn)
         
-        self.refresh_btn = QPushButton("Actualizar")
-        self.refresh_btn.setStyleSheet("background-color:")
-        self.refresh_btn.clicked.connect(self.load_entries)
-        self.toolbar_layout.addWidget(self.refresh_btn)
+
 
         self.toolbar_layout.addStretch()
         
@@ -110,7 +107,7 @@ class MainWindow(QMainWindow):
         self.status_bar.setStyleSheet("color:")
         
         self.load_entries()
-        self.search_field.setFocus()
+        QTimer.singleShot(0, self.search_field.setFocus)
 
     def logout(self):
         self.db.save()

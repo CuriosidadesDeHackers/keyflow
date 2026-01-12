@@ -56,7 +56,7 @@ sudo snap install keyflow
 Descarga el último release desde GitHub y ejecútalo:
 
 ```bash
-sudo apt install ./keyflow_1.0.1_amd64.deb
+sudo dpkg -i keyflow.deb
 ```
 
 ---
@@ -120,12 +120,15 @@ keyflow/
 ├── src/
 │   ├── database.py      # Lógica de base de datos (pykeepass)
 │   └── ui/
-│       ├── main_window.py    # Ventana principal
-│       ├── start_screen.py   # Pantalla de inicio
-│       ├── entry_dialog.py   # Diálogo de entrada
-│       ├── login_window.py   # Ventana de login
-│       └── styles.py         # Estilos CSS/QSS
+│       ├── main_window.py          # Ventana principal
+│       ├── start_screen.py         # Pantalla de inicio
+│       ├── entry_dialog.py         # Diálogo de entrada (agregar/editar)
+│       ├── login_window.py         # Ventana de login
+│       ├── password_dialog.py      # Generador de contraseñas
+│       ├── security_audit_dialog.py # Auditoría de contraseñas
+│       └── styles.py               # Estilos CSS/QSS
 ├── main.py             # Punto de entrada
+├── compilar.sh         # Script de compilación/instalación
 ├── requirements.txt    # Dependencias
 └── README.md           # Este archivo
 ```
@@ -165,7 +168,7 @@ Si encuentras algún error o tienes problemas con la aplicación, por favor rep�
 
 **⭐ Si te gusta Keyflow, dale una estrella en GitHub! ⭐**
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Maalfer/keyflow&type=Date)](https://star-history.com/#Maalfer/keyflow&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=Maalfer/keyflow&type=Date&_t=20260112)](https://star-history.com/#Maalfer/keyflow&Date)
 
 
 </div>
