@@ -1,7 +1,7 @@
 name: keyflow
 base: core22
 icon: snap/gui/icon.png
-version: '1.0.0'
+version: '1.0.1'
 summary: A secure password manager built with Python and PySide6.
 description: |
   Keyflow is a modern, secure password manager that helps you store and organize your passwords locally.

@@ -56,8 +56,7 @@ sudo snap install keyflow
 Descarga el último release desde GitHub y ejecútalo:
 
 ```bash
-sudo dpkg -i keyflow_1.0.0_amd64.deb
-sudo apt-get install -f
+sudo apt install ./keyflow_1.0.1_amd64.deb
 ```
 
 ---
@@ -66,7 +65,7 @@ sudo apt-get install -f
 
 Después de la instalación, puedes ejecutar Keyflow de dos formas:
 
-1. **Desde el menú de aplicaciones**: Busca "Keyflow Password Manager" en el menú de tu sistema
+1. **Desde el menú de aplicaciones**: Busca "Keyflow" en el menú de tu sistema
 2. **Desde la terminal**:
    ```bash
    keyflow

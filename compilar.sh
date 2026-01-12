@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 
 # Variables
 PKG_NAME="keyflow"
-PKG_VERSION="1.0.0"
+PKG_VERSION="1.0.1"
 PKG_ARCH="all"
 BUILD_DIR="debian-package"
 DEB_FILE="keyflow.deb"
@@ -236,10 +236,10 @@ if [ -f "$DEB_FILE" ]; then
             echo -e "${GREEN}✓${NC} Versión anterior desinstalada"
         fi
         
-        # Instalar nueva versión
+        # Instalar nueva versión con apt para resolver dependencias automáticamente
         echo -e "${YELLOW}Instalando nueva versión...${NC}"
-        sudo dpkg -i "$DEB_FILE"
-        sudo apt-get install -f -y > /dev/null 2>&1
+        # Usamos ./$DEB_FILE para que apt sepa que es un archivo local
+        sudo apt-get install "./$DEB_FILE" -y
         
         # Actualizar caché del sistema
         echo -e "${YELLOW}Actualizando caché del sistema...${NC}"
@@ -258,8 +258,7 @@ if [ -f "$DEB_FILE" ]; then
         echo -e "  ${BLUE}./compilar.sh --instalar${NC}"
         echo
         echo -e "O ejecuta:"
-        echo -e "  ${BLUE}sudo dpkg -i $DEB_FILE${NC}"
-        echo -e "  ${BLUE}sudo apt-get install -f${NC}"
+        echo -e "  ${BLUE}sudo apt install ./$DEB_FILE${NC}"
         echo
     fi
     

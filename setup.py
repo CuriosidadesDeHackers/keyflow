@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="keyflow",
-    version="1.0.0",
+    version="1.0.1",
     packages=find_packages(),
     py_modules=["main"],
     install_requires=[
