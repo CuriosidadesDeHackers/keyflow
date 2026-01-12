@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel,
                                QProgressBar, QApplication)
 from PySide6.QtCore import Qt, Signal, QSettings
 import os
-from .password_dialog import MasterPasswordDialog
+from .password_dialog import MasterPasswordDialog, EnterPasswordDialog
 
 class StartScreen(QWidget):
     open_db_signal = Signal(str, str)
@@ -110,9 +110,6 @@ class StartScreen(QWidget):
             if not filepath.endswith(".kdbx"):
                 filepath += ".kdbx"
             
-            if not filepath.endswith(".kdbx"):
-                filepath += ".kdbx"
-            
             dialog = MasterPasswordDialog(self)
             if dialog.exec():
                 pwd = dialog.get_password()
@@ -121,8 +118,9 @@ class StartScreen(QWidget):
     def open_db(self):
         filepath, _ = QFileDialog.getOpenFileName(self, "Abrir Base de Datos", "", "Bases de Datos KeePass (*.kdbx)")
         if filepath:
-            pwd, ok = QInputDialog.getText(self, "Ingresar Contraseña Maestra", "Contraseña Maestra:", echo=QLineEdit.EchoMode.Password)
-            if ok:
+            dialog = EnterPasswordDialog(self)
+            if dialog.exec():
+                pwd = dialog.get_password()
                 self.open_db_signal.emit(filepath, pwd)
 
 

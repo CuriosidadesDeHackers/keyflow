@@ -23,10 +23,28 @@ parts:
   keyflow:
     plugin: python
     source: .
-    python-packages:
-      - .
+    build-environment:
+      - SNAP_RESULT_USER: "snap_daemon"
+      
+    override-build: |
+      craftctl default
+      # Copiar assets al directorio donde main.py espera encontrarlos (site-packages)
+      cp -r $CRAFT_PART_SRC/assets $CRAFT_PART_INSTALL/lib/python3.10/site-packages/
+
     stage-packages:
-      - libxcb-cursor0
-      - libxcb-xinerama0
       - libxkbcommon-x11-0
+      - libxcb-cursor0
+      - libxcb-icccm4
+      - libxcb-image0
+      - libxcb-keysyms1
+      - libxcb-randr0
+      - libxcb-render-util0
+      - libxcb-render0
+      - libxcb-shape0
+      - libxcb-sync1
+      - libxcb-xfixes0
+      - libxcb-xinerama0
+      - libxcb-xkb1
+      - libx11-xcb1
+      - libgl1
 

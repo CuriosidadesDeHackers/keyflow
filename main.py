@@ -49,6 +49,28 @@ class KeyflowApp(QApplication):
         self.stack.addWidget(self.start_screen)
         
         self.stack.show()
+        
+        # Auto-Lock Timer
+        from PySide6.QtCore import QTimer
+        self.inactivity_timer = QTimer(self)
+        self.inactivity_timer.timeout.connect(self.lock_application)
+        self.inactivity_limit = 5 * 60 * 1000  # 5 minutos en milisegundos
+        self.inactivity_timer.start(self.inactivity_limit)
+
+    def notify(self, receiver, event):
+        from PySide6.QtCore import QEvent
+        # Reset timer on user interaction
+        if event.type() in (QEvent.KeyPress, QEvent.MouseButtonPress, QEvent.MouseMove, QEvent.Wheel):
+            if hasattr(self, 'inactivity_timer'):
+                self.inactivity_timer.start(self.inactivity_limit)
+        return super().notify(receiver, event)
+
+    def lock_application(self):
+        # Only lock if we are currently logged in (showing MainWindow)
+        if hasattr(self, 'main_window') and self.main_window and self.stack.currentWidget() == self.main_window:
+            print("Auto-locking due to inactivity...")
+            self.logout()
+            QMessageBox.information(self.stack, "Bloqueo Automático", "La aplicación se ha bloqueado por inactividad.")
 
     def create_db(self, filepath, password):
         try:
@@ -72,11 +94,14 @@ class KeyflowApp(QApplication):
         
         self.stack.addWidget(self.main_window)
         self.stack.setCurrentWidget(self.main_window)
+        # Restart timer ensuring we start counting from now
+        self.inactivity_timer.start(self.inactivity_limit)
 
     def logout(self):
-        self.stack.removeWidget(self.main_window)
-        self.main_window.deleteLater()
-        self.main_window = None
+        if hasattr(self, 'main_window') and self.main_window:
+            self.stack.removeWidget(self.main_window)
+            self.main_window.deleteLater()
+            self.main_window = None
         self.db.kp = None
         self.stack.setCurrentWidget(self.start_screen)
 

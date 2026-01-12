@@ -5,6 +5,7 @@ from PySide6.QtCore import Qt, Signal, QTimer
 from PySide6.QtGui import QAction, QClipboard, QGuiApplication, QKeySequence
 
 from .entry_dialog import EntryDialog
+from .security_audit_dialog import SecurityAuditDialog
 
 class MainWindow(QMainWindow):
     logout_signal = Signal()
@@ -16,13 +17,12 @@ class MainWindow(QMainWindow):
         
         self.db = db_helper
         
-        # Lista para almacenar todas las entradas
         self.all_entries = []
         
         self.clipboard_timer = QTimer(self)
         self.clipboard_timer.timeout.connect(self.update_clipboard_countdown)
         self.clipboard_remaining = 0
-        self.clipboard_duration = 12  # Duración total en segundos
+        self.clipboard_duration = 12
         
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -270,15 +270,20 @@ class MainWindow(QMainWindow):
         url = self.table.item(row, 3).text()
         
         menu = QMenu()
-        edit_action = menu.addAction("Editar")
-        delete_action = menu.addAction("Eliminar")
-        menu.addSeparator()
+        
+        # Acciones de copiado (Prioridad alta)
         copy_user_action = menu.addAction("Copiar Usuario")
         copy_pass_action = menu.addAction("Copiar Contraseña")
         
         copy_url_action = None
         if url and url.strip():
             copy_url_action = menu.addAction("Copiar URL")
+            
+        menu.addSeparator()
+        
+        # Acciones de edición (Prioridad baja)
+        edit_action = menu.addAction("Editar")
+        delete_action = menu.addAction("Eliminar")
         
         action = menu.exec(self.table.viewport().mapToGlobal(position))
         
@@ -386,6 +391,12 @@ class MainWindow(QMainWindow):
 
         help_menu = menubar.addMenu("A&yuda")
 
+        audit_action = QAction("🛡️ Auditar seguridad de contraseñas", self)
+        audit_action.triggered.connect(self.show_audit_dialog)
+        help_menu.addAction(audit_action)
+        
+        help_menu.addSeparator()
+
         about_action = QAction("&Acerca de", self)
         about_action.triggered.connect(self.show_about)
         help_menu.addAction(about_action)
@@ -398,3 +409,9 @@ class MainWindow(QMainWindow):
                               "Autor: Maalfer\n"
                               "GitHub: https://github.com/Maalfer/keyflow\n"
                               "LinkedIn: https://www.linkedin.com/in/maalfer1/")
+
+    def show_audit_dialog(self):
+        """Muestra el diálogo de auditoría de seguridad"""
+        entries = self.db.get_entries()
+        dialog = SecurityAuditDialog(entries, self)
+        dialog.exec()
