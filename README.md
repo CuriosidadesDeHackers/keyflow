@@ -166,6 +166,8 @@ Si encuentras algún error o tienes problemas con la aplicación, por favor rep�
 
 **⭐ Si te gusta Keyflow, dale una estrella en GitHub! ⭐**
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Maalfer/keyflow&type=Date)](https://star-history.com/#Maalfer/keyflow&Date)
+
+
+
 
 </div>
