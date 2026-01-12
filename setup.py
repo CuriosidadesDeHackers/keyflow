@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     py_modules=["main"],
     install_requires=[
-        "PySide6",
+        "PySide6-Essentials",
         "cryptography",
         "pykeepass",
     ],

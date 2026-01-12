@@ -110,6 +110,7 @@ class MainWindow(QMainWindow):
         self.status_bar.setStyleSheet("color:")
         
         self.load_entries()
+        self.search_field.setFocus()
 
     def logout(self):
         self.db.save()
@@ -416,24 +417,4 @@ class MainWindow(QMainWindow):
         dialog = SecurityAuditDialog(entries, self)
         dialog.exec()
 
-    def keyPressEvent(self, event):
-        """Detecta la escritura para enfocar automáticamente el buscador"""
-        # Si el foco ya está en el buscador, dejar que funcione normalmente
-        if self.search_field.hasFocus():
-            super().keyPressEvent(event)
-            return
 
-        # Ignorar si se presionan modificadores (Ctrl, Alt) para no interferir con atajos
-        if event.modifiers() & (Qt.ControlModifier | Qt.AltModifier):
-            super().keyPressEvent(event)
-            return
-
-        text = event.text()
-        # Si es un caracter imprimible válido (no teclas de navegación, escape, etc.)
-        if text and text.isprintable() and len(text) == 1:
-            self.search_field.setFocus()
-            self.search_field.setText(self.search_field.text() + text)
-            # Mover el cursor al final
-            self.search_field.setCursorPosition(len(self.search_field.text()))
-        else:
-            super().keyPressEvent(event)
