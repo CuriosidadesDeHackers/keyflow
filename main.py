@@ -1,6 +1,8 @@
 import sys
+import os
+import platform
 from PySide6.QtWidgets import QApplication, QStackedWidget, QMessageBox
-from PySide6.QtCore import QSettings
+from PySide6.QtCore import QSettings, QTimer, QEvent
 from PySide6.QtGui import QIcon
 from src.database import Database
 from src.ui.start_screen import StartScreen
@@ -9,9 +11,11 @@ from src.ui.styles import DARK_THEME
 
 class KeyflowApp(QApplication):
     def __init__(self, argv):
-        import os
+        
         # Forzar el uso de X11 (xcb) para evitar problemas gráficos y de permisos en Wayland/GNOME
-        os.environ["QT_QPA_PLATFORM"] = "xcb"
+        # Solo forzar X11 en Linux para evitar problemas con Wayland
+        if platform.system() == "Linux":
+            os.environ["QT_QPA_PLATFORM"] = "xcb"
         # Suprimir warnings benignos de Qt
         os.environ["QT_LOGGING_RULES"] = "qt.qpa.wayland*.debug=false;qt.qpa.wayland.textinput=false;qt.qpa.services=false"
         
@@ -36,8 +40,9 @@ class KeyflowApp(QApplication):
         self.stack.setWindowTitle("Keyflow")
         self.stack.resize(900, 600)
         
-        import os
         icon_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "logo.png")
+        if not os.path.exists(icon_path):
+            print(f"Warning: Icon not found at {icon_path}")
         if os.path.exists(icon_path):
             self.setWindowIcon(QIcon(icon_path))
             self.stack.setWindowIcon(QIcon(icon_path))
@@ -51,14 +56,12 @@ class KeyflowApp(QApplication):
         self.stack.show()
         
         # Auto-Lock Timer
-        from PySide6.QtCore import QTimer
         self.inactivity_timer = QTimer(self)
         self.inactivity_timer.timeout.connect(self.lock_application)
         self.inactivity_limit = 5 * 60 * 1000  # 5 minutos en milisegundos
         self.inactivity_timer.start(self.inactivity_limit)
 
     def notify(self, receiver, event):
-        from PySide6.QtCore import QEvent
         # Reset timer on user interaction
         if event.type() in (QEvent.KeyPress, QEvent.MouseButtonPress, QEvent.MouseMove, QEvent.Wheel):
             if hasattr(self, 'inactivity_timer'):

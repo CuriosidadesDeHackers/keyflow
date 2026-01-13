@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel, 
-                               QFileDialog, QInputDialog, QMessageBox, QSpacerItem, QSizePolicy, QLineEdit, QHBoxLayout,
+                               QFileDialog, QMessageBox, QSpacerItem, QSizePolicy, QLineEdit, QHBoxLayout,
                                QProgressBar, QApplication)
 from PySide6.QtCore import Qt, Signal, QSettings
 import os

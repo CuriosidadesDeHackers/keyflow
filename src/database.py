@@ -1,5 +1,4 @@
 from pykeepass import PyKeePass, create_database
-import shutil
 import os
 
 class Database:

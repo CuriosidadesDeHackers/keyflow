@@ -1,7 +1,7 @@
+import string
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLabel, QTreeWidget, QTreeWidgetItem, 
                                QPushButton, QHBoxLayout, QTabWidget, QWidget, QHeaderView)
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor, QIcon
+from PySide6.QtGui import QColor
 
 class SecurityAuditDialog(QDialog):
     def __init__(self, entries, parent=None):
@@ -122,7 +122,6 @@ class SecurityAuditDialog(QDialog):
             elif len(pwd) < 12:
                 issues.append("Corta (< 12 letras)")
                 
-            import string
             has_upper = any(c in string.ascii_uppercase for c in pwd)
             has_lower = any(c in string.ascii_lowercase for c in pwd)
             has_digit = any(c in string.digits for c in pwd)
