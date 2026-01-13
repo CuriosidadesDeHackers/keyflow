@@ -1,6 +1,8 @@
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
                                QLineEdit, QTextEdit, QPushButton, QWidget, QGridLayout, QScrollArea)
 from PySide6.QtCore import Qt
+import secrets
+import string
 
 class EntryDialog(QDialog):
     def __init__(self, parent=None, title="", username="", password="", url="", notes="", emoji=""):
@@ -203,8 +205,6 @@ class EntryDialog(QDialog):
         self.emoji_input.setText(emoji)
 
     def generate_password(self):
-        import secrets
-        import string
         
         alphabet = string.ascii_letters + string.digits + "!@#$%^&*()"
         password = ''.join(secrets.choice(alphabet) for i in range(20))

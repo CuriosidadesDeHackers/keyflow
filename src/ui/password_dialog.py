@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLabel, QLineEdit, 
-                               QPushButton, QHBoxLayout, QMessageBox, QWidget)
+                               QPushButton, QHBoxLayout, QWidget)
 from PySide6.QtCore import Qt
 
 class BasePasswordDialog(QDialog):

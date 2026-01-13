@@ -1,8 +1,9 @@
+import uuid
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                                QTableWidget, QTableWidgetItem, QPushButton, 
                                QHeaderView, QMessageBox, QMenu, QLabel, QLineEdit, QProgressBar)
 from PySide6.QtCore import Qt, Signal, QTimer
-from PySide6.QtGui import QAction, QClipboard, QGuiApplication, QKeySequence
+from PySide6.QtGui import QAction, QGuiApplication, QKeySequence
 
 from .entry_dialog import EntryDialog
 from .security_audit_dialog import SecurityAuditDialog
@@ -214,8 +215,6 @@ class MainWindow(QMainWindow):
             
         row = selected_items[0].row()
         uuid_str = self.table.item(row, 0).text()
-        
-        import uuid
         entry = self.db.kp.find_entries(uuid=uuid.UUID(uuid_str), first=True)
         if not entry:
             return
@@ -254,7 +253,6 @@ class MainWindow(QMainWindow):
                                      QMessageBox.Yes | QMessageBox.No)
         
         if confirm == QMessageBox.Yes:
-            import uuid
             self.db.delete_entry(uuid.UUID(uuid_str))
             self.load_entries()
             self.status_bar.showMessage("Entrada eliminada correctamente", 3000)
@@ -312,7 +310,7 @@ class MainWindow(QMainWindow):
         row = selected_items[0].row()
         uuid_str = self.table.item(row, 0).text()
         
-        import uuid
+        
         entry = self.db.kp.find_entries(uuid=uuid.UUID(uuid_str), first=True)
         if entry and entry.password:
             QGuiApplication.clipboard().setText(entry.password)
@@ -404,7 +402,7 @@ class MainWindow(QMainWindow):
                               "Gestor de Contraseñas Keyflow\n\n"
                               "Un gestor de contraseñas seguro y de código abierto compatible con archivos .kdbx.\n"
                               "Desarrollado con Python y PySide6.\n\n"
-                              "Autor: Maalfer\n"
+                              "Autores : Maalfer & Santitub\n"
                               "GitHub: https://github.com/Maalfer/keyflow\n"
                               "LinkedIn: https://www.linkedin.com/in/maalfer1/")
 
@@ -413,5 +411,3 @@ class MainWindow(QMainWindow):
         entries = self.db.get_entries()
         dialog = SecurityAuditDialog(entries, self)
         dialog.exec()
-
-
