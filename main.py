@@ -12,8 +12,8 @@ from src.ui.styles import DARK_THEME
 class KeyflowApp(QApplication):
     def __init__(self, argv):
         
-        # Forzar el uso de X11 (xcb) para evitar problemas gráficos y de permisos en Wayland/GNOME
-        # Solo forzar X11 en Linux para evitar problemas con Wayland
+        # Forzar el uso de X11 (xcb) para evitar problemas gráficos y de permisos en Wayland/GNOME.
+        # Solo forzar X11 en Linux para evitar problemas con Wayland.
         if platform.system() == "Linux":
             os.environ["QT_QPA_PLATFORM"] = "xcb"
         # Suprimir warnings benignos de Qt
